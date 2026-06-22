@@ -55,7 +55,15 @@ def fetch_band_gap_data(api_key: str, formulas: list[str]) -> pd.DataFrame:
                 ],
             )
 
+            total = len(docs)
+            excluded = 0
+
             for doc in docs:
+                # 不安定構造を除外: energy_above_hull が 0.05 eV/atom より大きいものはスキップ
+                if doc.energy_above_hull is not None and doc.energy_above_hull > 0.05:
+                    excluded += 1
+                    continue
+
                 # 結晶系と空間群を symmetry オブジェクトから取り出す
                 crystal_system = None
                 spacegroup_symbol = None
@@ -74,6 +82,8 @@ def fetch_band_gap_data(api_key: str, formulas: list[str]) -> pd.DataFrame:
                     "nsites": doc.nsites,
                     "energy_above_hull_eV_per_atom": doc.energy_above_hull,
                 })
+
+            print(f"  → 取得: {total} 件 / 除外（不安定構造）: {excluded} 件 / 採用: {total - excluded} 件")
 
     return pd.DataFrame(records)
 
