@@ -3,3 +3,8 @@ __pycache__/
 *.pyc
 .DS_Store
 .ipynb_checkpoints/
+
+# 大容量の生成物 (スクリプトで再現可能)
+*.joblib
+transport/data/carrier_transport_raw.csv
+transport/data/features_dataset.csv
