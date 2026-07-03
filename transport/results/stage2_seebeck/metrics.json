@@ -1,0 +1,50 @@
+[
+  {
+    "target": "seebeck_p_uV_K",
+    "log10_transformed": false,
+    "n_train": 12383,
+    "n_test": 3096,
+    "test_mae": 49.41777960826227,
+    "test_rmse": 75.08129942389496,
+    "test_r2": 0.7006610217412768,
+    "cv_r2_mean": 0.6831626174654576,
+    "cv_r2_std": 0.032693996783975665,
+    "band_gap_shap_rank": 1,
+    "top10_features": [
+      "band_gap_mp_eV",
+      "MagpieData minimum MeltingT",
+      "MagpieData maximum Electronegativity",
+      "spacegroup_number",
+      "MagpieData mode MeltingT",
+      "MagpieData mean NUnfilled",
+      "is_gap_direct_int",
+      "MagpieData mean Electronegativity",
+      "density_g_cm3",
+      "MagpieData mean Number"
+    ]
+  },
+  {
+    "target": "seebeck_n_uV_K",
+    "log10_transformed": false,
+    "n_train": 12383,
+    "n_test": 3096,
+    "test_mae": 54.277983150934865,
+    "test_rmse": 80.39945510677141,
+    "test_r2": 0.7304610619682547,
+    "cv_r2_mean": 0.6764193333051729,
+    "cv_r2_std": 0.03234796423214711,
+    "band_gap_shap_rank": 1,
+    "top10_features": [
+      "band_gap_mp_eV",
+      "MagpieData mean NpValence",
+      "MagpieData range NdUnfilled",
+      "MagpieData maximum NdUnfilled",
+      "is_gap_direct_int",
+      "MagpieData maximum MeltingT",
+      "MagpieData avg_dev NdUnfilled",
+      "MagpieData mean NdUnfilled",
+      "MagpieData mean GSbandgap",
+      "MagpieData avg_dev NpUnfilled"
+    ]
+  }
+]
