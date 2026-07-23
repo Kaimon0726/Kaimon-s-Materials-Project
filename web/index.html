@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Materials Property Prediction Pipeline — 熱電物性MLダッシュボード</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#overview">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">MI<span class="brand-sep">/</span>Transport<span class="brand-lab">LAB</span></span>
+    </a>
+    <nav class="tabs" role="tablist" aria-label="ビュー切り替え">
+      <a href="#overview" class="tab" data-view="overview">概要</a>
+      <a href="#explorer" class="tab" data-view="explorer">エクスプローラー</a>
+      <a href="#models" class="tab" data-view="models">モデル評価</a>
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="テーマ切り替え">
+      <span class="theme-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================== OVERVIEW ============================== -->
+<section id="view-overview" class="view">
+  <div class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">MATERIALS INFORMATICS · THERMOELECTRIC TRANSPORT</p>
+      <h1>第一原理計算を、<br>機械学習で置き換える。</h1>
+      <p class="lede">
+        無機半導体の電子・熱電輸送物性を予測する3ステージMLパイプライン。
+        DFTバンド構造計算とBoltzTraP輸送計算という高コストなワークフローを、
+        Materials Project の登録データに基づく安価なサロゲートモデルで代替し、
+        材料スクリーニングを高速化します。
+      </p>
+      <div class="hero-kpis" id="hero-kpis"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title"><span class="section-no">01</span>3ステージ設計</h2>
+    <p class="section-desc">
+      バンドギャップ → 輸送物性という物理的因果連鎖に沿って設計。ただし予測値のカスケードは行わず、
+      各ステージの入力は<strong>データベース登録値のみ</strong>に固定 —
+      誤差伝播を断ち、各モデルを独立に評価可能に保ちます。
+    </p>
+    <div class="stage-grid">
+      <article class="stage-card">
+        <div class="stage-head"><span class="stage-chip">STAGE 1</span><span class="stage-sym">E<sub>g</sub></span></div>
+        <h3>バンドギャップ</h3>
+        <p>DFTバンド構造計算の代替。8種の古典的半導体による導入デモ。ここで得た「ギャップが電気的振る舞いを駆動する」という知見が後段の設計原理になります。</p>
+        <dl class="stage-meta"><dt>代替対象</dt><dd>DFT band structure</dd></dl>
+      </article>
+      <article class="stage-card">
+        <div class="stage-head"><span class="stage-chip">STAGE 2</span><span class="stage-sym">S</span></div>
+        <h3>ゼーベック係数</h3>
+        <p>DFT + BoltzTraP輸送計算の代替。<strong>MP登録バンドギャップ</strong>(Stage 1の予測値ではない)を特徴量として、約15,000件の半導体で学習。</p>
+        <dl class="stage-meta"><dt>代替対象</dt><dd>DFT + BoltzTraP</dd></dl>
+      </article>
+      <article class="stage-card">
+        <div class="stage-head"><span class="stage-chip">STAGE 3</span><span class="stage-sym">σ</span></div>
+        <h3>電気伝導率</h3>
+        <p>Stage 2の予測値は<strong>使わず</strong>、登録量のみから独立に予測。数桁にわたるため log₁₀σ として学習します。</p>
+        <dl class="stage-meta"><dt>代替対象</dt><dd>DFT + BoltzTraP</dd></dl>
+      </article>
+    </div>
+
+    <h2 class="section-title"><span class="section-no">02</span>データセット構築</h2>
+    <p class="section-desc">
+      ターゲットは MPContribs <code>carrier_transport</code>(Ricci et al., <em>Sci. Data</em> 2017, CC-BY 4.0)。
+      BoltzTraP計算によるゼーベック係数と σ/τ(300 K, 10¹⁸ cm⁻³)。特徴量とフィルターはMPコアAPIの登録値を使用。
+    </p>
+    <div class="funnel card" id="funnel"></div>
+
+    <h2 class="section-title"><span class="section-no">03</span>結論 — バンドギャップは効いているか?</h2>
+    <div class="conclusion-grid">
+      <div class="card conclusion-card">
+        <p class="conclusion-big">SHAP重要度 <strong>1位 / 145特徴量</strong></p>
+        <p>登録バンドギャップは、ゼーベック係数(p型・n型とも)で<strong>単独最重要の特徴量</strong>。2位に約4倍の差をつけています。小さいギャップがSを急激に抑制する方向性は、バイポーラ伝導の物理と整合します。</p>
+      </div>
+      <div class="card conclusion-card">
+        <p class="conclusion-big">電気伝導率でも <strong>Top 10</strong></p>
+        <p>σでは電子数記述子(未充填d状態・p価電子)と密度が支配的で、ギャップは4位/7位の寄与。「ギャップ→輸送」の因果連鎖をSHAPが定量化した形です。</p>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#explorer">15,479件をエクスプローラーで見る →</a>
+      <a class="btn" href="#models">モデル評価を見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== EXPLORER ============================== -->
+<section id="view-explorer" class="view" hidden>
+  <div class="container">
+    <h2 class="section-title"><span class="section-no">DB</span>データセット・エクスプローラー</h2>
+    <p class="section-desc">
+      学習に使った15,479材料の輸送物性を対話的に探索。凡例をクリックすると結晶系で絞り込み、点をクリックすると詳細を固定表示します。
+    </p>
+
+    <div class="controls card">
+      <div class="control">
+        <label for="sel-y">縦軸(ターゲット)</label>
+        <select id="sel-y"></select>
+      </div>
+      <div class="control">
+        <label for="sel-x">横軸(特徴量)</label>
+        <select id="sel-x"></select>
+      </div>
+      <div class="control control-grow">
+        <label for="inp-search">組成式で検索</label>
+        <input id="inp-search" type="search" placeholder="例: Bi2Te3, SnSe, ZrNiSn …" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="control control-end">
+        <label>&nbsp;</label>
+        <button id="btn-table" class="btn" type="button" aria-pressed="false">テーブル表示</button>
+      </div>
+    </div>
+
+    <div class="legend-row" id="xtal-legend" role="group" aria-label="結晶系フィルター"></div>
+
+    <div class="explorer-layout">
+      <div class="card chart-card">
+        <div class="chart-head">
+          <h3 id="scatter-title" class="chart-title"></h3>
+          <p class="chart-sub" id="scatter-count"></p>
+        </div>
+        <div class="scatter-wrap" id="scatter-wrap">
+          <canvas id="scatter"></canvas>
+          <div class="tooltip" id="scatter-tip" hidden></div>
+        </div>
+      </div>
+      <aside class="detail-panel card" id="detail-panel">
+        <p class="detail-empty">点をクリックすると、材料の詳細がここに表示されます。</p>
+      </aside>
+    </div>
+
+    <div class="card table-card" id="table-card" hidden>
+      <div class="chart-head">
+        <h3 class="chart-title">テーブルビュー</h3>
+        <p class="chart-sub" id="table-count"></p>
+      </div>
+      <div class="table-scroll">
+        <table id="data-table"></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== MODELS ============================== -->
+<section id="view-models" class="view" hidden>
+  <div class="container">
+    <h2 class="section-title"><span class="section-no">ML</span>モデル評価 &amp; SHAP解析</h2>
+    <p class="section-desc">
+      ターゲットごとにランダムフォレスト回帰(80/20分割・5-fold CV)。SHAP(TreeExplainer)で特徴量寄与を定量化します。
+    </p>
+
+    <div class="target-tabs" id="target-tabs" role="tablist" aria-label="ターゲット選択"></div>
+
+    <div class="model-kpis" id="model-kpis"></div>
+
+    <div class="model-layout">
+      <div class="card chart-card">
+        <div class="chart-head">
+          <h3 class="chart-title">SHAP重要度 — Top 15 <span class="chart-note">/ 145特徴量</span></h3>
+          <p class="chart-sub">mean |SHAP|。<span class="accent-key"></span> は登録バンドギャップ(Stage 1からの物理リンク)。</p>
+        </div>
+        <div id="shap-chart" class="shap-chart"></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head">
+          <h3 class="chart-title">パリティプロット(テストセット)</h3>
+          <p class="chart-sub" id="parity-sub"></p>
+        </div>
+        <div class="parity-wrap"><img id="parity-img" alt="予測値と真値のパリティプロット"></div>
+      </div>
+    </div>
+
+    <div class="card note-card">
+      <h3>注意事項</h3>
+      <ul>
+        <li>ターゲットは<strong>計算値</strong>(GGAバンド構造上のBoltzTraP/CRTA)であり実験値ではありません。GGAはギャップを系統的に過小評価します。</li>
+        <li>σ は緩和時間 τ = 10⁻¹⁴ s の定数近似の下でのみ定義されます。</li>
+        <li>同一BoltzTraP計算に由来する有効質量 m* は、ターゲット隣接リークとなるため特徴量から意図的に除外しています。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <p>Data: <a href="https://materialsproject.org/" target="_blank" rel="noopener">Materials Project</a> / MPContribs <a href="https://contribs.materialsproject.org/projects/carrier_transport" target="_blank" rel="noopener">carrier_transport</a> — Ricci et al., <em>Sci. Data</em> <strong>4</strong>, 170085 (2017), CC-BY 4.0</p>
+    <p class="footer-mono">RF regressors · scikit-learn · matminer Magpie 132 features · SHAP TreeExplainer</p>
+  </div>
+</footer>
+
+<script src="data/dataset.js"></script>
+<script src="data/results.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

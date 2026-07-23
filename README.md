@@ -112,8 +112,30 @@ transport/
   train.py                      Training/evaluation (--stage 2 | --stage 3)
   data/                         Built datasets (CSV)
   results/                      Metrics, plots, SHAP rankings, trained models
+web/                            Interactive dashboard (static SPA, no build step)
+  build_data.py                 Exports dataset/results to web/data/*.json
+  index.html / style.css / app.js
 docs/DATA_SOURCES.md            Data-source investigation record
 ```
+
+## Web dashboard
+
+A dependency-free static dashboard (`web/`) presents the pipeline: an overview
+of the 3-stage design, an interactive scatter explorer over all 15,479
+materials (crystal-system filter, formula search, per-material detail with
+Materials Project links, sortable table view), and per-target model metrics
+with SHAP rankings and parity plots. Light/dark themes included.
+
+No server needed — just open `web/index.html` in a browser (data ships as JS
+globals, so `file://` works). After retraining:
+
+```bash
+python web/build_data.py      # refresh web/data/*.js from the CSVs/metrics
+python web/build_single.py    # optional: one-file bundle at web/dist/milab-dashboard.html
+```
+
+The single-file bundle inlines everything (data, images, code) and can be
+mailed, double-clicked, or dropped on any static host as-is.
 
 ## Reproducing
 

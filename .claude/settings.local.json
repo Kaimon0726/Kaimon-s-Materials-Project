@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(python -c \"import mp_api, dotenv, pandas; print\\('OK'\\)\")",
-      "Bash(python3 -m pip list)"
+      "Bash(python3 -m pip list)",
+      "Bash(conda run *)"
     ]
   }
 }
