@@ -3,14 +3,23 @@
 CSS, JS, data, and parity images are all inlined, so the output runs from a
 double-click, an email attachment, or any static host with zero dependencies.
 Run `python web/build_data.py` first if the datasets changed.
+
+    python web/build_single.py                  # -> web/dist/milab-dashboard.html
+    python web/build_single.py --fragment PATH  # same page without the
+                                                # doctype/html/head/body shell,
+                                                # for hosts that supply their own
 """
 import base64
 import re
+import sys
 from pathlib import Path
 
 WEB = Path(__file__).resolve().parent
 OUT = WEB / "dist" / "milab-dashboard.html"
 OUT.parent.mkdir(exist_ok=True)
+FRAGMENT = None
+if "--fragment" in sys.argv:
+    FRAGMENT = Path(sys.argv[sys.argv.index("--fragment") + 1]).expanduser()
 
 html = (WEB / "index.html").read_text()
 css = (WEB / "style.css").read_text()
@@ -38,12 +47,22 @@ body = body_rest.rsplit("</body>", 1)[0]
 body = re.sub(r'<script src="[^"]+"></script>\n?', "", body)
 head = re.sub(r'<link rel="stylesheet"[^>]*>', f"<style>\n{css}</style>", head)
 
-OUT.write_text(
-    head + "<body>" + body +
+scripts = (
     f"<script>{dataset}</script>\n"
     f"<script>{results}</script>\n"
     f"<script>{parity_js}</script>\n"
     f"<script>\n{app}</script>\n"
-    "</body>\n</html>\n"
 )
+
+OUT.write_text(head + "<body>" + body + scripts + "</body>\n</html>\n")
 print(f"{OUT.relative_to(WEB.parent)} — {OUT.stat().st_size / 1e6:.2f} MB")
+
+if FRAGMENT:
+    title = re.search(r"<title>(.*?)</title>", head, re.S).group(1)
+    FRAGMENT.write_text(
+        f"<title>{title}</title>\n"
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        '<meta name="color-scheme" content="dark">\n'
+        f"<style>\n{css}</style>\n" + body + scripts
+    )
+    print(f"{FRAGMENT} — {FRAGMENT.stat().st_size / 1e6:.2f} MB")
