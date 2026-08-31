@@ -4,6 +4,9 @@ __pycache__/
 .DS_Store
 .ipynb_checkpoints/
 
+# ローカルのClaude Code設定・スキル(依存物含む。個人環境の設定でありプロジェクト成果物ではない)
+.claude/
+
 # 大容量の生成物 (スクリプトで再現可能)
 *.joblib
 transport/data/carrier_transport_raw.csv
