@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mi-project 解説書</title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Kaku+Gothic+New:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F3F7F8; --panel:#FFFFFF; --panel-2:#EAF2F4; --line:#CFDFE4; --line-soft:#E3EDF0;
+  --ink:#0B1F26; --ink-2:#3E5A64; --ink-3:#6C8791;
+  --accent:#0075A6; --accent-wash:rgba(0,117,166,.10); --accent-line:rgba(0,117,166,.38);
+  --ok:#1B7F4A; --ok-wash:rgba(27,127,74,.12);
+  --bad:#B23A2E; --bad-wash:rgba(178,58,46,.12);
+  --warn:#8A5A00; --warn-wash:rgba(138,90,0,.13);
+  --code-bg:#EAF1F3;
+  --sans:"BIZ UDPGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+  --head:"Zen Kaku Gothic New","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C171B; --panel:#12222A; --panel-2:#182D36; --line:#274550; --line-soft:#1E3841;
+    --ink:#E4EEF1; --ink-2:#A9C0C8; --ink-3:#7E97A0;
+    --accent:#5CC6F0; --accent-wash:rgba(92,198,240,.14); --accent-line:rgba(92,198,240,.45);
+    --ok:#5FCB8E; --ok-wash:rgba(95,203,142,.16);
+    --bad:#F08A7E; --bad-wash:rgba(240,138,126,.16);
+    --warn:#E6B34D; --warn-wash:rgba(230,179,77,.16);
+    --code-bg:#182D36; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C171B; --panel:#12222A; --panel-2:#182D36; --line:#274550; --line-soft:#1E3841;
+  --ink:#E4EEF1; --ink-2:#A9C0C8; --ink-3:#7E97A0;
+  --accent:#5CC6F0; --accent-wash:rgba(92,198,240,.14); --accent-line:rgba(92,198,240,.45);
+  --ok:#5FCB8E; --ok-wash:rgba(95,203,142,.16);
+  --bad:#F08A7E; --bad-wash:rgba(240,138,126,.16);
+  --warn:#E6B34D; --warn-wash:rgba(230,179,77,.16);
+  --code-bg:#182D36; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.9 var(--sans);
+  -webkit-font-smoothing:antialiased;font-feature-settings:"palt";}
+a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--accent-line);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.shell{display:grid;grid-template-columns:276px minmax(0,1fr);max-width:1220px;margin:0 auto;padding-inline:16px}
+
+/* ---- sidebar ---- */
+.side{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;overflow:auto;
+  padding-block:28px 40px;padding-right:22px;border-right:1px solid var(--line);font-size:13.5px;line-height:1.5;
+  scrollbar-width:thin}
+.side summary{display:none}
+.brand{font-family:var(--head);font-weight:700;font-size:17px;letter-spacing:.01em;color:var(--ink);margin:0 0 4px}
+.brand-sub{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin:0 0 22px;line-height:1.5}
+.nav-group{margin-bottom:18px}
+.nav-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);
+  padding:0 8px;margin-bottom:6px}
+.nav-docs,.nav-sub{list-style:none;margin:0;padding:0}
+.nav-docs>li>a{display:flex;gap:10px;align-items:baseline;padding:5px 8px;border-radius:5px;color:var(--ink-2);text-decoration:none}
+.nav-docs>li>a:hover{background:var(--panel-2);color:var(--ink)}
+.nav-docs>li.active>a{background:var(--accent-wash);color:var(--accent);font-weight:700}
+.nav-docs .n{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);min-width:1.7em;font-variant-numeric:tabular-nums}
+.nav-docs>li.active>a .n{color:var(--accent)}
+.nav-sub{display:none;margin:2px 0 8px 0;padding-left:8px;border-left:1px solid var(--line-soft);margin-left:14px}
+.nav-docs>li.active>.nav-sub{display:block}
+.nav-sub li a{display:block;padding:3px 10px;color:var(--ink-3);text-decoration:none;font-size:12.5px;line-height:1.45;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-sub li.l3 a{padding-left:20px}
+.nav-sub li a:hover{color:var(--ink)}
+.nav-sub li.active a{color:var(--accent);font-weight:700}
+.side-foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--ink-3);line-height:1.7}
+
+/* ---- main ---- */
+main{padding-block:28px 120px;padding-left:44px;max-width:860px;min-width:0}
+.page-head{padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.page-head h1{font:700 30px/1.3 var(--head);margin:0 0 8px;text-wrap:balance;letter-spacing:.005em}
+.page-head p{margin:0;color:var(--ink-2);max-width:62ch}
+.page-head .meta{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:10px}
+
+.doc{padding-block:56px 12px;border-top:1px solid var(--line)}
+.doc:first-of-type{border-top:0;padding-top:40px}
+.doc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:22px}
+.doc-num{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.doc-head h1{font:700 25px/1.35 var(--head);margin:0;flex:1 1 100%;text-wrap:balance;letter-spacing:.005em}
+.src{font-family:var(--mono);font-size:12.5px;text-decoration:none;color:var(--ink-2);background:var(--panel-2);
+  border:1px solid var(--line);border-radius:5px;padding:3px 9px}
+.src:hover{color:var(--accent);border-color:var(--accent-line)}
+.doc h2{font:700 20px/1.4 var(--head);margin:2.4em 0 .7em;text-wrap:balance}
+.doc h3{font:700 17px/1.45 var(--head);margin:2.1em 0 .6em;padding-left:12px;border-left:3px solid var(--accent-line);text-wrap:balance}
+.doc h2+h3{margin-top:1.2em}
+.doc p{margin:0 0 1.1em;max-width:72ch}
+.doc ul,.doc ol{padding-left:1.5em;margin:0 0 1.1em;max-width:72ch}
+.doc li{margin-bottom:.35em}
+.doc li>p{margin-bottom:.4em}
+.doc strong{font-weight:700}
+code{font-family:var(--mono);font-size:.86em;background:var(--code-bg);padding:.12em .38em;border-radius:4px;word-break:break-all}
+pre{margin:1.2em 0;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.6}
+pre code{background:none;padding:0;font-size:inherit}
+pre.mermaid{text-align:center;padding:20px 12px;line-height:1.4}
+pre.mermaid svg{max-width:100%;height:auto}
+.wl{color:inherit;text-decoration:none;border-bottom:1px dashed var(--accent-line)}
+.wl:hover{color:var(--accent);border-bottom-style:solid}
+.ref{font-family:var(--mono);font-size:.9em;text-decoration:none;border-bottom:1px dotted var(--accent-line)}
+.ref:hover{border-bottom-style:solid}
+code .ref{font-size:inherit}
+.tbl{overflow-x:auto;margin:1.2em 0 1.5em;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.65}
+th{text-align:left;font-weight:700;background:var(--panel-2);padding:9px 12px;border-bottom:1px solid var(--line);
+  white-space:nowrap;color:var(--ink-2);font-size:13px}
+td{padding:9px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top;min-width:7em}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700;color:var(--ink-2)}
+.v{display:inline-block;font:700 12px/1 var(--sans);padding:5px 8px;border-radius:4px;white-space:nowrap;letter-spacing:.02em}
+.v-ok{color:var(--ok);background:var(--ok-wash)}
+.v-diff{color:var(--bad);background:var(--bad-wash)}
+.v-fig{color:var(--warn);background:var(--warn-wash)}
+.v-code{color:var(--accent);background:var(--accent-wash)}
+.callout{border-left:3px solid var(--accent);background:var(--accent-wash);padding:10px 14px;border-radius:0 6px 6px 0}
+.callout.warn{border-color:var(--bad);background:var(--bad-wash)}
+.callout.ok{border-color:var(--ok);background:var(--ok-wash)}
+mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;margin:1em 0 !important;padding:2px 0}
+hr{border:0;border-top:1px solid var(--line);margin:2em 0}
+
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px 0 12px}
+  .side summary{display:block;cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px;list-style:none;padding:6px 0}
+  .side summary::before{content:"目次 ";}
+  .side summary::-webkit-details-marker{display:none}
+  .side details[open] summary{margin-bottom:12px}
+  .brand,.brand-sub{display:none}
+  main{padding-left:0;padding-top:12px}
+  .page-head h1{font-size:25px}
+  .doc-head h1{font-size:22px}
+  body{font-size:15.5px}
+}
+@media print{
+  .side{display:none}.shell{display:block}main{max-width:none;padding:0}
+  .doc{break-before:page}.doc:first-of-type{break-before:auto}
+  a{color:inherit}
+}
+</style>
+<div class="shell">
+<nav class="side" aria-label="目次"><details>
+<summary></summary>
+<p class="brand">mi-project 解説書</p>
+<p class="brand-sub">docs/explain/*.md<br>生成 2026-09-17</p>
+<div class="nav-group"><div class="nav-label">検証</div><ol class="nav-docs">
+<li data-doc="doc-00_verify"><a href="#doc-00_verify"><span class="n">00</span><span>アーキテクチャ図とコードの突き合わせ</span></a><ol class="nav-sub"><li class="l2"><a href="#00_verify-h1">判定サマリ</a></li><li class="l2"><a href="#00_verify-h2">ノードの検証</a></li><li class="l2"><a href="#00_verify-h3">エッジの検証</a></li><li class="l2"><a href="#00_verify-h4">コードにあるが図に無い要素</a></li><li class="l2"><a href="#00_verify-h5">図にあるがコードに無い要素</a></li><li class="l2"><a href="#00_verify-h6">3 段階(バンドギャップ → ゼーベック係数 → 電気伝導率)の受け渡し粒度の検証</a></li><li class="l2"><a href="#00_verify-h7">数値主張の実測結果</a></li><li class="l2"><a href="#00_verify-h8">修正版アーキテクチャ図(mermaid)</a></li><li class="l2"><a href="#00_verify-h9">作者に確認すべき未解決点(2026-09-15 回答済み)</a></li></ol></li>
+</ol></div>
+<div class="nav-group"><div class="nav-label">ファイル解説(実行順)</div><ol class="nav-docs">
+<li data-doc="doc-01_get_data"><a href="#doc-01_get_data"><span class="n">01</span><span>get_data.py</span></a><ol class="nav-sub"><li class="l3"><a href="#01_get_data-h1">0. 図中の対応箇所</a></li><li class="l3"><a href="#01_get_data-h2">1. このファイルの役割</a></li><li class="l3"><a href="#01_get_data-h3">2. 入力と出力</a></li><li class="l3"><a href="#01_get_data-h4">3. 関数ごとの解説</a></li><li class="l3"><a href="#01_get_data-h5">4. なぜこの処理が必要か</a></li><li class="l3"><a href="#01_get_data-h6">5. この処理を外したらどうなるか</a></li></ol></li>
+<li data-doc="doc-02_get_transport_data"><a href="#doc-02_get_transport_data"><span class="n">02</span><span>transport/get_transport_data.py</span></a><ol class="nav-sub"><li class="l3"><a href="#02_get_transport_data-h1">0. 図中の対応箇所</a></li><li class="l3"><a href="#02_get_transport_data-h2">1. このファイルの役割</a></li><li class="l3"><a href="#02_get_transport_data-h3">2. 入力と出力</a></li><li class="l3"><a href="#02_get_transport_data-h4">3. 関数ごとの解説</a></li><li class="l3"><a href="#02_get_transport_data-h5">4. なぜこの処理が必要か</a></li><li class="l3"><a href="#02_get_transport_data-h6">5. この処理を外したらどうなるか</a></li></ol></li>
+<li data-doc="doc-03_featurize"><a href="#doc-03_featurize"><span class="n">03</span><span>transport/featurize.py</span></a><ol class="nav-sub"><li class="l3"><a href="#03_featurize-h1">0. 図中の対応箇所</a></li><li class="l3"><a href="#03_featurize-h2">1. このファイルの役割</a></li><li class="l3"><a href="#03_featurize-h3">2. 入力と出力</a></li><li class="l3"><a href="#03_featurize-h4">3. 関数ごとの解説</a></li><li class="l3"><a href="#03_featurize-h5">4. なぜこの処理が必要か</a></li><li class="l3"><a href="#03_featurize-h6">5. この処理を外したらどうなるか</a></li></ol></li>
+<li data-doc="doc-04_train"><a href="#doc-04_train"><span class="n">04</span><span>transport/train.py</span></a><ol class="nav-sub"><li class="l3"><a href="#04_train-h1">0. 図中の対応箇所</a></li><li class="l3"><a href="#04_train-h2">1. このファイルの役割</a></li><li class="l3"><a href="#04_train-h3">2. 入力と出力</a></li><li class="l3"><a href="#04_train-h4">3. 関数ごとの解説</a></li><li class="l3"><a href="#04_train-h5">4. なぜこの処理が必要か</a></li><li class="l3"><a href="#04_train-h6">5. この処理を外したらどうなるか</a></li></ol></li>
+<li data-doc="doc-05_build_data"><a href="#doc-05_build_data"><span class="n">05</span><span>web/build_data.py</span></a><ol class="nav-sub"><li class="l3"><a href="#05_build_data-h1">0. 図中の対応箇所</a></li><li class="l3"><a href="#05_build_data-h2">1. このファイルの役割</a></li><li class="l3"><a href="#05_build_data-h3">2. 入力と出力</a></li><li class="l3"><a href="#05_build_data-h4">3. 関数ごとの解説</a></li><li class="l3"><a href="#05_build_data-h5">4. なぜこの処理が必要か</a></li><li class="l3"><a href="#05_build_data-h6">5. この処理を外したらどうなるか</a></li></ol></li>
+<li data-doc="doc-06_build_single"><a href="#doc-06_build_single"><span class="n">06</span><span>web/build_single.py</span></a><ol class="nav-sub"><li class="l3"><a href="#06_build_single-h1">0. 図中の対応箇所</a></li><li class="l3"><a href="#06_build_single-h2">1. このファイルの役割</a></li><li class="l3"><a href="#06_build_single-h3">2. 入力と出力</a></li><li class="l3"><a href="#06_build_single-h4">3. 関数ごとの解説</a></li><li class="l3"><a href="#06_build_single-h5">4. なぜこの処理が必要か</a></li><li class="l3"><a href="#06_build_single-h6">5. この処理を外したらどうなるか</a></li></ol></li>
+<li data-doc="doc-07_app"><a href="#doc-07_app"><span class="n">07</span><span>web/app.js</span></a><ol class="nav-sub"><li class="l3"><a href="#07_app-h1">0. 図中の対応箇所</a></li><li class="l3"><a href="#07_app-h2">1. このファイルの役割</a></li><li class="l3"><a href="#07_app-h3">2. 入力と出力</a></li><li class="l3"><a href="#07_app-h4">3. 関数ごとの解説</a></li><li class="l3"><a href="#07_app-h5">4. なぜこの処理が必要か</a></li><li class="l3"><a href="#07_app-h6">5. この処理を外したらどうなるか</a></li></ol></li>
+</ol></div>
+<div class="nav-group"><div class="nav-label">付録</div><ol class="nav-docs">
+<li data-doc="doc-90_glossary"><a href="#doc-90_glossary"><span class="n">90</span><span>用語集</span></a><ol class="nav-sub"><li class="l2"><a href="#90_glossary-h1">物性物理側</a></li><li class="l3"><a href="#g-バンドギャップ">バンドギャップ</a></li><li class="l3"><a href="#g-直接遷移-間接遷移">直接遷移/間接遷移</a></li><li class="l3"><a href="#g-ゼーベック係数">ゼーベック係数</a></li><li class="l3"><a href="#g-電気伝導率">電気伝導率</a></li><li class="l3"><a href="#g-定緩和時間近似">定緩和時間近似</a></li><li class="l3"><a href="#g-BoltzTraP">BoltzTraP</a></li><li class="l3"><a href="#g-DFT">DFT</a></li><li class="l3"><a href="#g-GGA">GGA</a></li><li class="l3"><a href="#g-energy-above-hull">energy above hull</a></li><li class="l3"><a href="#g-キャリア濃度">キャリア濃度</a></li><li class="l3"><a href="#g-p型-n型">p型/n型</a></li><li class="l3"><a href="#g-結晶系">結晶系</a></li><li class="l3"><a href="#g-空間群">空間群</a></li><li class="l3"><a href="#g-多形">多形</a></li><li class="l3"><a href="#g-有効質量">有効質量</a></li><li class="l3"><a href="#g-バイポーラ伝導">バイポーラ伝導</a></li><li class="l3"><a href="#g-熱電材料">熱電材料</a></li><li class="l3"><a href="#g-Materials-Project">Materials Project</a></li><li class="l3"><a href="#g-MPContribs">MPContribs</a></li><li class="l3"><a href="#g-mp-id">mp-id</a></li><li class="l2"><a href="#90_glossary-h2">機械学習側</a></li><li class="l3"><a href="#g-特徴量">特徴量</a></li><li class="l3"><a href="#g-記述子">記述子</a></li><li class="l3"><a href="#g-Magpie記述子">Magpie記述子</a></li><li class="l3"><a href="#g-matminer">matminer</a></li><li class="l3"><a href="#g-one-hotエンコーディング">one-hotエンコーディング</a></li><li class="l3"><a href="#g-ランダムフォレスト">ランダムフォレスト</a></li><li class="l3"><a href="#g-train-test分割">train/test分割</a></li><li class="l3"><a href="#g-交差検証">交差検証</a></li><li class="l3"><a href="#g-データリーク">データリーク</a></li><li class="l3"><a href="#g-GroupShuffleSplit">GroupShuffleSplit</a></li><li class="l3"><a href="#g-SHAP">SHAP</a></li><li class="l3"><a href="#g-TreeExplainer">TreeExplainer</a></li><li class="l3"><a href="#g-MAE">MAE</a></li><li class="l3"><a href="#g-RMSE">RMSE</a></li><li class="l3"><a href="#g-決定係数">決定係数</a></li><li class="l3"><a href="#g-パリティプロット">パリティプロット</a></li><li class="l3"><a href="#g-対数変換">対数変換</a></li><li class="l3"><a href="#g-目的変数">目的変数</a></li><li class="l3"><a href="#g-random_state">random_state</a></li><li class="l3"><a href="#g-サロゲートモデル">サロゲートモデル</a></li></ol></li>
+<li data-doc="doc-91_design_decisions"><a href="#doc-91_design_decisions"><span class="n">91</span><span>設計判断と却下された選択肢</span></a><ol class="nav-sub"><li class="l2"><a href="#91_design_decisions-h1">D1. カスケード禁止(予測値を後段に流さない)</a></li><li class="l2"><a href="#91_design_decisions-h2">D2. 目的変数のデータソース</a></li><li class="l2"><a href="#91_design_decisions-h3">D3. σ の扱い: 単位換算 + 対数変換</a></li><li class="l2"><a href="#91_design_decisions-h4">D4. 特徴量の構成</a></li><li class="l2"><a href="#91_design_decisions-h5">D5. 空間群番号を整数のまま使う</a></li><li class="l2"><a href="#91_design_decisions-h6">D6. モデル: ランダムフォレスト固定・チューニングなし</a></li><li class="l2"><a href="#91_design_decisions-h7">D7. 4 モデル独立学習(マルチ出力にしない)</a></li><li class="l2"><a href="#91_design_decisions-h8">D8. 分割: 行単位の無作為 80/20 + 訓練側 5-fold CV</a></li><li class="l2"><a href="#91_design_decisions-h9">D9. 欠損処理: 行削除のみ</a></li><li class="l2"><a href="#91_design_decisions-h10">D10. フィルタ基準</a></li><li class="l2"><a href="#91_design_decisions-h11">D11. キャッシュと再現性</a></li><li class="l2"><a href="#91_design_decisions-h12">D12. Web 配布の形態</a></li></ol></li>
+<li data-doc="doc-92_audit"><a href="#doc-92_audit"><span class="n">92</span><span>実装監査</span></a><ol class="nav-sub"><li class="l2"><a href="#92_audit-h1">A1. データリーク(同一組成・同一材料の train/test 混入)</a></li><li class="l2"><a href="#92_audit-h2">A2. 分割方法が材料単位になっているか(GroupShuffleSplit 等の要否)</a></li><li class="l2"><a href="#92_audit-h3">A3. 前処理が fold 内で閉じているか</a></li><li class="l2"><a href="#92_audit-h4">A4. 評価指標の妥当性と報告スコアの再現可能性</a></li><li class="l2"><a href="#92_audit-h5">A5. 物理的に不整合な仮定(σ/τ 問題を含む)</a></li><li class="l2"><a href="#92_audit-h6">A6. 単位系の一貫性</a></li><li class="l2"><a href="#92_audit-h7">A7. その他の実装上の問題</a></li></ol></li>
+</ol></div>
+<div class="side-foot"><a href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project" target="_blank" rel="noopener">GitHub リポジトリ</a><br>数式: MathJax / 図: mermaid(要ネット接続)</div>
+</details></nav>
+<main>
+<header class="page-head"><h1>mi-project 解説書</h1><p>バンドギャップ → ゼーベック係数 → 電気伝導率 予測パイプラインの引き継ぎ資料。アーキテクチャ図の検証、ソースファイルごとの解説、用語集、設計判断、実装監査。</p><p class="meta">作業ツリー commit 8a6c36a 基準 · 行番号リンクは GitHub main ブランチの該当行を開く</p></header>
+<article class="doc" id="doc-00_verify">
+<header class="doc-head"><span class="doc-num">00</span><h1>アーキテクチャ図とコードの突き合わせ</h1></header>
+<p>検証対象: <a href="../mi-project-architecture.html">docs/mi-project-architecture.html</a>(ページタイトル「mi-project データフロー Diagram」、archify 生成のインタラクティブ HTML)。</p>
+<p>検証方法: HTML に埋め込まれた SVG から <code>data-node-id</code>(11 ノード)と <code>data-edge-from</code> / <code>data-edge-to</code> / <code>data-edge-label</code>(11 エッジ)を機械抽出し、各要素をソースコードおよび実データ(CSV の実測行数・列数、PNG のチェックサム)と突き合わせた。行番号は 2026-09-15 時点の作業ツリー(commit 8a6c36a、クリーン)基準。</p>
+<h2 id="00_verify-h1">判定サマリ</h2>
+<ul>
+<li>ノード 11 個: 一致 11</li>
+<li>エッジ 11 本: 一致 9、相違 2</li>
+<li>図にあるがコードに無い要素: 0</li>
+<li>コードにあるが図に無い要素: 7(うちパイプラインに実質関与するもの 5)</li>
+</ul>
+<p><strong>相違・欠落があるため、指示に従いここで作業を停止し、以下の一覧を提示する。</strong></p>
+<h2 id="00_verify-h2">ノードの検証</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>図中の要素</th>
+<th>対応する実体</th>
+<th>判定</th>
+<th>根拠</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.env / MP_API_KEY</code></td>
+<td>リポジトリルートの <code>.env</code>(git 管理外)</td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L31-L36" target="_blank" rel="noopener">transport/get_transport_data.py:31-36</a></code> が <code>load_dotenv</code> で読み、無ければ例外。<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/.gitignore#L1" target="_blank" rel="noopener">.gitignore:1</a></code></td>
+</tr>
+<tr>
+<td><code>MP Summary API(バンドギャップ・密度など)</code></td>
+<td><code>mp_api.client.MPRester</code> 経由の <code>materials.summary.search</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L108-L124" target="_blank" rel="noopener">transport/get_transport_data.py:108-124</a></code>。取得フィールドに <code>band_gap</code>・<code>density</code> を含む(116, 119 行)</td>
+</tr>
+<tr>
+<td><code>MPContribs carrier_transport (S, σ)</code></td>
+<td><code>mpcontribs.client.Client</code> への <code>query_contributions</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L56-L71" target="_blank" rel="noopener">transport/get_transport_data.py:56-71</a></code>。<code>data.S.p/n</code>、<code>data.sigma.p/n</code> を取得(65-68 行)</td>
+</tr>
+<tr>
+<td><code>get_transport_data.py(結合・安定相/半導体フィルタ)</code></td>
+<td><code>transport/get_transport_data.py</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td>結合 160 行、E_hull ≤ 0.05 フィルタ 165-166 行、band_gap &gt; 0 フィルタ 171 行</td>
+</tr>
+<tr>
+<td><code>transport_dataset.csv(15,479行 × 19列)</code></td>
+<td><code>transport/data/transport_dataset.csv</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td>書き出し <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L184" target="_blank" rel="noopener">get_transport_data.py:184</a></code>。実測: 15,479 データ行 × 19 列(<code>wc -l</code> / ヘッダ列数で確認)</td>
+</tr>
+<tr>
+<td><code>featurize.py(Magpie統計量 + MP登録値)</code></td>
+<td><code>transport/featurize.py</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td>Magpie 記述子 42-47 行、MP 登録値スカラー <code>SCALAR_FEATURES</code> 27-33 行</td>
+</tr>
+<tr>
+<td><code>features_dataset.csv(15,479行 × 151列)</code></td>
+<td><code>transport/data/features_dataset.csv</code>(git 管理外)</td>
+<td><span class="v v-ok">一致</span></td>
+<td>書き出し <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L69" target="_blank" rel="noopener">featurize.py:69</a></code>。実測: 15,479 データ行 × 151 列(メタ 2 + 目的変数 4 + 特徴量 145)</td>
+</tr>
+<tr>
+<td><code>train.py(RandomForest --stage 2/3)</code></td>
+<td><code>transport/train.py</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code>RandomForestRegressor</code> 138-140 行、<code>--stage {2,3}</code> 引数 182 行</td>
+</tr>
+<tr>
+<td><code>transport/results/(metrics.json・model・SHAP)</code></td>
+<td><code>transport/results/stage2_seebeck/</code>、<code>stage3_conductivity/</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td>metrics.json 199-200 行、model joblib 159 行、SHAP 出力 106-117 行、パリティ図 156-157 行</td>
+</tr>
+<tr>
+<td><code>build_data / build_single(CSV・JSON → 埋め込みJS)</code></td>
+<td><code>web/build_data.py</code> と <code>web/build_single.py</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td>JS グローバルとして書き出し <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py#L50-L51" target="_blank" rel="noopener">build_data.py:50-51</a>, 75-76</code>。ただし 2 スクリプト間の中間ファイルは図に無い(後述)</td>
+</tr>
+<tr>
+<td><code>milab-dashboard.html(単一ファイル配布)</code></td>
+<td><code>web/dist/milab-dashboard.html</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td>出力先 <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L18" target="_blank" rel="noopener">build_single.py:18</a></code>、書き出し 57 行</td>
+</tr>
+</tbody>
+</table></div>
+<p>補足: エッジ <code>APIキー</code> の副ラベル「認証」、エッジ <code>登録値</code> の副ラベル「MP本体・特徴量側」はいずれもコードの実態と矛盾しない。</p>
+<h2 id="00_verify-h3">エッジの検証</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>図中の要素</th>
+<th>対応する実体</th>
+<th>判定</th>
+<th>根拠</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.env → get_transport_data.py(APIキー)</code></td>
+<td><code>load_dotenv</code> → <code>MPRester(API_KEY)</code> / <code>Client(apikey=API_KEY)</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L32-L33" target="_blank" rel="noopener">get_transport_data.py:32-33</a>, 56, 108</code></td>
+</tr>
+<tr>
+<td><code>MP Summary API → get_transport_data.py(登録値)</code></td>
+<td><code>fetch_mp_summary</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L100-L150" target="_blank" rel="noopener">get_transport_data.py:100-150</a></code></td>
+</tr>
+<tr>
+<td><code>MPContribs → get_transport_data.py(S・σ)</code></td>
+<td><code>fetch_carrier_transport</code></td>
+<td><span class="v v-diff">相違</span></td>
+<td>API を叩くのは <code>transport/data/carrier_transport_raw.csv</code> が存在しない初回のみ。キャッシュがあれば API には接続せず CSV を読む(<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L52-L54" target="_blank" rel="noopener">get_transport_data.py:52-54</a></code>)。このキャッシュファイルと条件分岐が図に描かれていない</td>
+</tr>
+<tr>
+<td><code>get_transport_data.py → transport_dataset.csv(選別済み)</code></td>
+<td><code>df.to_csv(OUTPUT_PATH)</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L183-L184" target="_blank" rel="noopener">get_transport_data.py:183-184</a></code></td>
+</tr>
+<tr>
+<td><code>transport_dataset.csv → featurize.py(組成式・登録値)</code></td>
+<td><code>pd.read_csv(INPUT_PATH)</code>、<code>formula_pretty</code> から Magpie 生成</td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L19" target="_blank" rel="noopener">featurize.py:19</a>, 37, 42-46</code></td>
+</tr>
+<tr>
+<td><code>featurize.py → features_dataset.csv(145特徴量に変換)</code></td>
+<td><code>out.to_csv(OUTPUT_PATH)</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L56-L69" target="_blank" rel="noopener">featurize.py:56-69</a></code>。実測の特徴量列数 145(= Magpie 132 + スカラー 5 + 直接遷移フラグ 1 + 結晶系 one-hot 7)。SHAP ランキング CSV も 145 行</td>
+</tr>
+<tr>
+<td><code>features_dataset.csv → train.py(学習入力)</code></td>
+<td><code>pd.read_csv(FEATURES_PATH)</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L39" target="_blank" rel="noopener">train.py:39</a>, 189</code></td>
+</tr>
+<tr>
+<td><code>train.py → transport/results/(モデル・指標・SHAP)</code></td>
+<td>各種 <code>savefig</code> / <code>to_csv</code> / <code>joblib.dump</code> / <code>json.dump</code></td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L94" target="_blank" rel="noopener">train.py:94</a>, 108, 117, 156-159, 199-200</code></td>
+</tr>
+<tr>
+<td><code>transport/results/ → build_data/build_single(精度指標)</code></td>
+<td><code>build_data.py</code> が metrics.json と SHAP 重要度 CSV を読む</td>
+<td><span class="v v-diff">相違</span></td>
+<td>ラベルの「精度指標」に加えて SHAP 重要度 CSV(上位 15 件)も流れる(<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py#L62-L74" target="_blank" rel="noopener">build_data.py:62-74</a></code>)。さらにパリティ PNG は results/ から直接ではなく <code>web/assets/</code> 経由で <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L31-L38" target="_blank" rel="noopener">build_single.py:31-38</a></code> が読むが、この経路が図に無い(後述)</td>
+</tr>
+<tr>
+<td><code>transport_dataset.csv → build_data/build_single(実データ)</code></td>
+<td><code>build_data.py</code> が直接読む</td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py#L17" target="_blank" rel="noopener">build_data.py:17</a></code></td>
+</tr>
+<tr>
+<td><code>build_data/build_single → milab-dashboard.html(1ファイルに合体)</code></td>
+<td>CSS/JS/データ/画像のインライン化</td>
+<td><span class="v v-ok">一致</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L42-L57" target="_blank" rel="noopener">build_single.py:42-57</a></code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="00_verify-h4">コードにあるが図に無い要素</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>コード側の実体</th>
+<th>内容</th>
+<th>判定</th>
+<th>根拠</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_data.py</code> + <code>semiconductor_band_gaps.csv</code></td>
+<td>ステージ1(バンドギャップのデータ取得、8 組成 → 114 行 × 9 列)。README はこれを 3 ステージ構成の第 1 段と位置づけるが、図には一切登場しない。なおこの CSV を読むコードはリポジトリに存在せず、後段パイプラインとはデータ的に非接続</td>
+<td><span class="v v-code">コードにあるが図に無い</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/get_data.py#L20" target="_blank" rel="noopener">get_data.py:20</a>, 103-104</code>、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/README.md#L107-L108" target="_blank" rel="noopener">README.md:107-108</a>。参照検索でヒット 0</td>
+</tr>
+<tr>
+<td><code>transport/data/carrier_transport_raw.csv</code></td>
+<td>MPContribs 全件取得の生キャッシュ(30,467 行 × 7 列、git 管理外)。2 回目以降の実行では API の代わりにこれが入力になる</td>
+<td><span class="v v-code">コードにあるが図に無い</span></td>
+<td>書き込み <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L95" target="_blank" rel="noopener">get_transport_data.py:95</a></code>、読み込み 52-54 行、<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/.gitignore#L9" target="_blank" rel="noopener">.gitignore:9</a></code></td>
+</tr>
+<tr>
+<td><code>web/data/dataset.js</code>・<code>web/data/results.js</code></td>
+<td><code>build_data.py</code> の出力かつ <code>build_single.py</code>・<code>index.html</code> の入力となる中間ファイル。図では build_data と build_single が 1 ノードに束ねられており、この受け渡しが見えない</td>
+<td><span class="v v-code">コードにあるが図に無い</span></td>
+<td>書き出し <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py#L50-L51" target="_blank" rel="noopener">build_data.py:50-51</a>, 75-76</code>、読み込み <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L27-L28" target="_blank" rel="noopener">build_single.py:27-28</a></code>、<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/index.html#L211-L212" target="_blank" rel="noopener">web/index.html:211-212</a></code></td>
+</tr>
+<tr>
+<td><code>web/index.html</code>・<code>web/style.css</code>・<code>web/app.js</code></td>
+<td>手書きのダッシュボード本体。<code>build_single.py</code> の入力であると同時に、<strong>バンドルを経ない非バンドル版ダッシュボードとしてそのまま動く</strong>(README が第一の起動方法として案内)。図の終端が <code>milab-dashboard.html</code> のみのため、この経路が存在しないように見える</td>
+<td><span class="v v-code">コードにあるが図に無い</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L24-L26" target="_blank" rel="noopener">build_single.py:24-26</a></code>、<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/index.html#L211-L213" target="_blank" rel="noopener">web/index.html:211-213</a></code>、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/README.md#L129-L130" target="_blank" rel="noopener">README.md:129-130</a></td>
+</tr>
+<tr>
+<td><code>web/assets/parity_*.png</code></td>
+<td>パリティ図 4 枚。<code>app.js</code> が実行時に相対パスで参照し、<code>build_single.py</code> が base64 でインライン化する。<strong>transport/results/ の同名 PNG とバイト単位で同一(md5 一致を確認)だが、コピーを行うコードはリポジトリに存在しない</strong>(手動コピーと推定。確定はコードからは判断不能)</td>
+<td><span class="v v-code">コードにあるが図に無い</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js#L58-L61" target="_blank" rel="noopener">web/app.js:58-61</a></code>、<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L31-L38" target="_blank" rel="noopener">build_single.py:31-38</a></code>。全 build スクリプトに assets への書き込み処理なし</td>
+</tr>
+<tr>
+<td><code>build_single.py --fragment</code> 出力</td>
+<td>doctype/head/body 殻なしの埋め込み用フラグメントを任意パスに追加出力する第 2 の成果物</td>
+<td><span class="v v-code">コードにあるが図に無い</span></td>
+<td><code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L20-L22" target="_blank" rel="noopener">build_single.py:20-22</a>, 60-68</code></td>
+</tr>
+<tr>
+<td><code>docs/make_slides.py</code> → <code>mi-project-slides.pptx/pdf</code></td>
+<td>スライド生成スクリプト。データパイプラインの外側の成果物であり、図の対象範囲外である可能性が高い(意図は作者確認)</td>
+<td><span class="v v-code">コードにあるが図に無い</span></td>
+<td><code>docs/make_slides.py</code>(python-pptx でスライド構築)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="00_verify-h5">図にあるがコードに無い要素</h2>
+<p>該当なし。抽出した 11 ノード・11 エッジすべてに対応する実体が存在する。</p>
+<h2 id="00_verify-h6">3 段階(バンドギャップ → ゼーベック係数 → 電気伝導率)の受け渡し粒度の検証</h2>
+<ul>
+<li><strong>ステージ1 → ステージ2/3</strong>: コード上、ステージ1の成果物(<code>semiconductor_band_gaps.csv</code>)を後段が読む箇所は存在しない。後段の特徴量となるバンドギャップは MP Summary API の登録値 <code>band_gap_mp_eV</code> であり(<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L116" target="_blank" rel="noopener">get_transport_data.py:116</a></code>、<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L28" target="_blank" rel="noopener">featurize.py:28</a></code>)、図の <code>MP Summary API → get_transport_data.py</code> の矢印はこの実態と一致する。ただし図にはステージ1そのものが描かれていないため、「3 ステージ構成」という README の説明単位は図から読み取れない。</li>
+<li><strong>ステージ2 → ステージ3</strong>: 図にステージ2→3 の矢印は無く、コードでも <code>train.py</code> は両ステージとも <code>features_dataset.csv</code> のみを入力とし、前段の予測値を特徴量に使わない(<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L121-L141" target="_blank" rel="noopener">train.py:121-141</a></code>、目的変数を 1 つずつ独立に学習)。<strong>カスケード無しという点で図とコードは一致</strong>。</li>
+<li><strong>粒度の差</strong>: コードではステージ2と3は別々の実行(<code>--stage 2</code> / <code>--stage 3</code>)・別々の出力ディレクトリ(<code>stage2_seebeck/</code>、<code>stage3_conductivity/</code>)だが、図では <code>train.py</code> 1 ノード・<code>transport/results/</code> 1 ノードに統合されている。矢印の向き・内容に誤りは無いが、「4 モデル(S の p/n、log₁₀σ の p/n)が独立に学習される」ことは図からは読めない(<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L48-L67" target="_blank" rel="noopener">train.py:48-67</a>, 194-197</code>)。</li>
+</ul>
+<h2 id="00_verify-h7">数値主張の実測結果</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>図の主張</th>
+<th>実測</th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>transport_dataset.csv = 15,479 行 × 19 列</td>
+<td>15,479 データ行、19 列</td>
+<td><span class="v v-ok">一致</span></td>
+</tr>
+<tr>
+<td>features_dataset.csv = 15,479 行 × 151 列</td>
+<td>15,479 データ行、151 列</td>
+<td><span class="v v-ok">一致</span></td>
+</tr>
+<tr>
+<td>145 特徴量に変換</td>
+<td>151 − メタ 2 − 目的変数 4 = 145。SHAP 重要度 CSV も 145 行</td>
+<td><span class="v v-ok">一致</span></td>
+</tr>
+</tbody>
+</table></div>
+<p>注意: <code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L66" target="_blank" rel="noopener">featurize.py:66</a></code> の <code>dropna()</code> により、データを再構築した場合は行数が 15,479 から減り得る(現状は特徴量欠損 0 のため入力と同数)。図の行数は現時点のスナップショットである。</p>
+<h2 id="00_verify-h8">修正版アーキテクチャ図(mermaid)</h2>
+<p>相違 2 件(キャッシュ経路、results→web の内容)と欠落 5 件(ステージ1、生キャッシュ、web 中間 JS、手書きソース経路、assets の手動コピー)を反映した版。</p>
+<pre class="mermaid">flowchart TB
+    env[&quot;.env&lt;br/&gt;MP_API_KEY&quot;]
+
+    subgraph s1[&quot;ステージ1(独立デモ。後段と非接続)&quot;]
+        get_data[&quot;get_data.py&quot;]
+        bg_csv[(&quot;semiconductor_band_gaps.csv&lt;br/&gt;114行×9列&lt;br/&gt;※読み手なし&quot;)]
+    end
+
+    mp_summary[&quot;MP Summary API&lt;br/&gt;登録バンドギャップ・密度など&quot;]
+    mpcontribs[&quot;MPContribs carrier_transport&lt;br/&gt;S, σ/τ(300K, 10^18 cm^-3)&quot;]
+
+    subgraph s23[&quot;ステージ2・3 本体パイプライン&quot;]
+        get_transport[&quot;transport/get_transport_data.py&lt;br/&gt;結合・安定相/半導体フィルタ&quot;]
+        raw[(&quot;transport/data/carrier_transport_raw.csv&lt;br/&gt;30,467行×7列(キャッシュ)&quot;)]
+        td[(&quot;transport/data/transport_dataset.csv&lt;br/&gt;15,479行×19列&quot;)]
+        featurize[&quot;transport/featurize.py&quot;]
+        fd[(&quot;transport/data/features_dataset.csv&lt;br/&gt;15,479行×151列(特徴量145)&quot;)]
+        train[&quot;transport/train.py --stage 2 / --stage 3&lt;br/&gt;RandomForest ×4モデル(S_p, S_n, log10σ_p, log10σ_n)&quot;]
+        results[(&quot;transport/results/stage2_seebeck/&lt;br/&gt;transport/results/stage3_conductivity/&lt;br/&gt;metrics.json・model_*.joblib・parity_*.png・shap_*&quot;)]
+    end
+
+    subgraph w[&quot;web/ ダッシュボード&quot;]
+        build_data[&quot;web/build_data.py&quot;]
+        datajs[(&quot;web/data/dataset.js&lt;br/&gt;web/data/results.js&quot;)]
+        src[&quot;web/index.html + style.css + app.js&lt;br/&gt;(手書き。非バンドル版としてそのまま動作)&quot;]
+        assets[(&quot;web/assets/parity_*.png&quot;)]
+        build_single[&quot;web/build_single.py&quot;]
+        dash[(&quot;web/dist/milab-dashboard.html&lt;br/&gt;(+ --fragment 出力)&quot;)]
+    end
+
+    env --&gt;|APIキー| get_data
+    get_data --&gt;|&quot;8組成の検索結果&quot;| bg_csv
+    env --&gt;|APIキー| get_transport
+    mpcontribs -.-&gt;|&quot;S・σ/τ 初回のみ&quot;| get_transport
+    get_transport --&gt;|初回に全件保存| raw
+    raw --&gt;|2回目以降の入力| get_transport
+    mp_summary --&gt;|登録値| get_transport
+    get_transport --&gt;|選別済み| td
+    td --&gt;|組成式・登録値| featurize
+    featurize --&gt;|145特徴量に変換| fd
+    fd --&gt;|学習入力| train
+    train --&gt;|モデル・指標・SHAP| results
+    td --&gt;|実データ| build_data
+    results --&gt;|&quot;metrics.json・SHAP上位15&quot;| build_data
+    results -.-&gt;|&quot;手動コピー: コード上の対応なし&quot;| assets
+    build_data --&gt; datajs
+    datajs --&gt;|実行時に読込| src
+    datajs --&gt; build_single
+    src --&gt; build_single
+    assets --&gt;|実行時に参照| src
+    assets --&gt;|base64インライン化| build_single
+    build_single --&gt;|1ファイルに合体| dash
+</pre>
+<h2 id="00_verify-h9">作者に確認すべき未解決点(2026-09-15 回答済み)</h2>
+<ol>
+<li><strong>ステージ1の省略は意図か</strong>(σ 不使用決定は有効か)→ <strong>回答: 残す</strong>。ステージ1・σ とも現行構成のまま維持。以降の解説はステージ1と σ を現行実装として扱う。</li>
+<li><strong><code>web/assets/parity_*.png</code> の由来</strong> → <strong>回答: 手動コピーで合っている</strong>。再学習後は <code>transport/results/*/parity_*.png</code> を <code>web/assets/</code> へ手動でコピーする運用。</li>
+<li><strong>図の数値の扱い</strong> → <strong>回答: 維持する</strong>。15,479 等は固定スナップショット値として扱う。</li>
+<li><strong><code>docs/make_slides.py</code> の図への包含要否</strong> → 個別回答なし。パイプライン外成果物として図から除外のままとする。</li>
+<li><strong>非バンドル版ダッシュボードの位置づけ</strong> → <strong>回答: <code>web/index.html</code> が正</strong>。<code>dist/milab-dashboard.html</code> は副次的な配布形態。</li>
+</ol>
+</article>
+
+<article class="doc" id="doc-01_get_data">
+<header class="doc-head"><span class="doc-num">01</span><h1>get_data.py(ステージ1: バンドギャップ取得)</h1><a class="src" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/get_data.py" target="_blank" rel="noopener">get_data.py</a></header>
+<h3 id="01_get_data-h1">0. 図中の対応箇所</h3>
+<p>元のアーキテクチャ図(docs/mi-project-architecture.html)には対応ノードが無い(<a href="#doc-00_verify">00_verify.md</a> の「コードにあるが図に無い要素」参照)。修正版 mermaid ではサブグラフ「ステージ1」内の <code>get_data.py</code> ノードと、<code>.env → get_data.py(APIキー)</code>・<code>get_data.py → semiconductor_band_gaps.csv</code> の 2 本のエッジに対応する。2026-09-15 の作者回答によりステージ1は現行構成として維持する。</p>
+<h3 id="01_get_data-h2">1. このファイルの役割</h3>
+<p><a class="wl" href="#g-Materials-Project">Materials Project</a>(MP)の API から 8 種の代表的半導体の<a class="wl" href="#g-バンドギャップ">バンドギャップ</a>と構造情報を取得し、<code>semiconductor_band_gaps.csv</code> に保存するステージ1のスクリプト。パイプライン全体の最初に位置するが、出力 CSV を読むコードはリポジトリに存在せず、ステージ2・3 とはデータ的に接続していない独立のデモである。後段と共有しているのは安定相フィルタ基準(E_hull ≤ 0.05 eV/atom)という<strong>設計上の規約</strong>だけである。</p>
+<h3 id="01_get_data-h3">2. 入力と出力</h3>
+<p><strong>入力</strong>
+- <code>.env</code> の環境変数 <code>MP_API_KEY</code>(文字列 1 個)。無ければ 14-15 行目で <code>ValueError</code> を送出して停止する。
+- コード内定数 <code>TARGET_FORMULAS</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/get_data.py#L20" target="_blank" rel="noopener">get_data.py:20</a>): <code>["Si", "Ge", "GaAs", "GaN", "ZnO", "InP", "CdTe", "ZnS"]</code> の 8 組成。
+- API 応答: 組成ごとの <code>SummaryDoc</code> オブジェクト列(取得フィールドは 44-56 行で 8 個に限定)。</p>
+<p><strong>出力</strong>: リポジトリルートの <code>semiconductor_band_gaps.csv</code>(現状 114 データ行 × 9 列、エンコーディング utf-8-sig)。スキーマ:</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>列</th>
+<th>dtype</th>
+<th>単位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>material_id</td>
+<td>str(<a class="wl" href="#g-mp-id">mp-id</a>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>formula_pretty</td>
+<td>str</td>
+<td>—</td>
+</tr>
+<tr>
+<td>band_gap_eV</td>
+<td>float</td>
+<td>eV</td>
+</tr>
+<tr>
+<td>is_gap_direct</td>
+<td>bool</td>
+<td>—</td>
+</tr>
+<tr>
+<td>crystal_system</td>
+<td>str</td>
+<td>—</td>
+</tr>
+<tr>
+<td>spacegroup_symbol</td>
+<td>str</td>
+<td>—</td>
+</tr>
+<tr>
+<td>volume_A3</td>
+<td>float</td>
+<td>Å³</td>
+</tr>
+<tr>
+<td>nsites</td>
+<td>int</td>
+<td>個</td>
+</tr>
+<tr>
+<td>energy_above_hull_eV_per_atom</td>
+<td>float</td>
+<td>eV/atom</td>
+</tr>
+</tbody>
+</table></div>
+<p>中間ファイルは無い。副作用は stdout への取得件数ログのみ。</p>
+<h3 id="01_get_data-h4">3. 関数ごとの解説</h3>
+<p><strong><code>fetch_band_gap_data(api_key: str, formulas: list[str]) -&gt; pd.DataFrame</code></strong>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/get_data.py#L22-L88" target="_blank" rel="noopener">get_data.py:22-88</a>)</p>
+<p>組成式ごとに <code>mpr.materials.summary.search(formula=formula, ...)</code> を 1 回ずつ呼び(44-56 行)、返された各材料 <code>doc</code> に安定相フィルタを適用する(63-65 行):</p>
+<p>$$\text{採用} \iff E_{\mathrm{hull}} \le 0.05\ \mathrm{eV/atom}$$</p>
+<p>ここで $E_{\mathrm{hull}}$ はコード中の <code>doc.energy_above_hull</code>、すなわち <a class="wl" href="#g-energy-above-hull">energy above hull</a>(その組成系の熱力学的凸包からのエネルギー差。0 なら最安定相)である。<code>doc.energy_above_hull</code> が <code>None</code> の行は条件式の第 1 項が偽になるため<strong>除外されず採用される</strong>(63 行)。採用行は 9 項目の dict にして <code>records</code> に蓄積し、DataFrame で返す。</p>
+<p>引数の影響: <code>formulas</code> に組成を追加すれば行数が増える。フィルタ閾値 0.05 はハードコードであり引数化されていない。計算量は $O\!\left(\sum_f |{\rm docs}_f|\right)$ で、実行時間は API 往復(組成ごとに 1 リクエスト)が支配的。ローカル処理は数百行の走査で無視できる。</p>
+<p><strong><code>main()</code></strong>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/get_data.py#L91-L115" target="_blank" rel="noopener">get_data.py:91-115</a>)</p>
+<p>取得結果を <code>formula_pretty</code>、<code>band_gap_eV</code> の昇順でソートして CSV 保存し(100-104 行)、参考表示として組成ごとの最小バンドギャップを出力する(108-115 行):</p>
+<p>$$E_g^{\min}(c) = \min\{\, E_g(m) \mid m \in c,\ E_g(m) &gt; 0 \,\}$$</p>
+<p>ここで $c$ は組成(<code>formula_pretty</code> でグループ化)、$m$ はその組成に属する各材料、$E_g$ は <code>band_gap_eV</code>。$E_g &gt; 0$ の条件(110 行)は金属的なエントリ($E_g = 0$)を集計から外すためのもので、CSV 本体には $E_g = 0$ の行も残る。</p>
+<h3 id="01_get_data-h5">4. なぜこの処理が必要か</h3>
+<p><strong>物理側</strong>: 同一組成でも原子配列が異なる<a class="wl" href="#g-多形">多形</a>が MP に複数登録されており(8 組成で 114 行になるのはこのため)、バンドギャップが構造に依存することをデータで確認できる。また $E_{\mathrm{hull}}$ による不安定構造の除外は、実在しにくい仮想構造を統計に混ぜないための前処理で、この基準がステージ2・3(<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L43" target="_blank" rel="noopener">transport/get_transport_data.py:43</a></code>)に引き継がれる。</p>
+<p><strong>機械学習側</strong>: このファイルに学習は無い。「データベースから物性値を取得し、フィルタし、表形式に整える」というステージ2・3 と同型の最小工程を、行数が目視確認できる規模(114 行)で先に確立する位置づけである。</p>
+<h3 id="01_get_data-h6">5. この処理を外したらどうなるか</h3>
+<p>後段への定量的影響はゼロである。<code>semiconductor_band_gaps.csv</code> を読むコードは存在しないため、このファイルと出力 CSV を削除しても <code>transport_dataset.csv</code>(15,479 行)、<code>features_dataset.csv</code>(151 列)、<code>metrics.json</code> の全数値、ダッシュボードの表示内容はいずれも 1 バイトも変わらない。失われるのは (1) ステージ1というプロジェクトの説明単位、(2) E_hull ≤ 0.05 という基準を最初に導入した出所、の 2 点で、いずれもコードではなく説明・文書上の損失である。</p>
+</article>
+
+<article class="doc" id="doc-02_get_transport_data">
+<header class="doc-head"><span class="doc-num">02</span><h1>transport/get_transport_data.py(ステージ2・3: データセット構築)</h1><a class="src" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py" target="_blank" rel="noopener">transport/get_transport_data.py</a></header>
+<h3 id="02_get_transport_data-h1">0. 図中の対応箇所</h3>
+<p>図のノード <code>get_transport_data.py(結合・安定相/半導体フィルタ)</code> に対応。流入エッジは <code>.env →(APIキー)</code>、<code>MP Summary API →(登録値)</code>、<code>MPContribs →(S・σ)</code> の 3 本、流出エッジは <code>→ transport_dataset.csv(選別済み)</code>。ただし図に無いキャッシュファイル <code>data/carrier_transport_raw.csv</code> への書き込み・読み込みがある(<a href="#doc-00_verify">00_verify.md</a> の相違 1)。</p>
+<h3 id="02_get_transport_data-h2">1. このファイルの役割</h3>
+<p><a class="wl" href="#g-目的変数">目的変数</a>(ゼーベック係数・電気伝導率)を持つ <a class="wl" href="#g-MPContribs">MPContribs</a> の <code>carrier_transport</code> データセットと、<a class="wl" href="#g-特徴量">特徴量</a>の素材(登録バンドギャップ・構造スカラー)を持つ <a class="wl" href="#g-Materials-Project">Materials Project</a> 本体の summary API を、<a class="wl" href="#g-mp-id">mp-id</a> をキーに内部結合して 1 枚の表にする。パイプライン本体の起点であり、これ以降のすべての工程は API に触れず、この出力だけを入力とする。</p>
+<h3 id="02_get_transport_data-h3">2. 入力と出力</h3>
+<p><strong>入力</strong>
+- <code>.env</code> の <code>MP_API_KEY</code>(31-36 行。ルート直下の <code>.env</code> を明示パスで読む)。
+- MPContribs <code>carrier_transport</code>: <code>metal = No</code> の全エントリ(30,467 件)。各エントリから <code>identifier</code>、<code>formula</code>、<code>data.dE.value</code>、<code>data.S.{p,n}.value</code>、<code>data.sigma.{p,n}.value</code> の 7 項目(61-69 行)。
+- MP summary API: mp-id 照合で <code>band_gap</code>、<code>is_gap_direct</code>、<code>energy_above_hull</code>、<code>density</code>、<code>volume</code>、<code>nsites</code>、<code>symmetry</code> など(113-123 行)。</p>
+<p><strong>出力</strong>
+- <code>transport/data/carrier_transport_raw.csv</code> — MPContribs 取得結果の生キャッシュ。30,467 行 × 7 列(material_id, formula_ricci, band_gap_boltztrap_eV, seebeck_p_uV_K, seebeck_n_uV_K, sigma_over_tau_p, sigma_over_tau_n)。git 管理外(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/.gitignore#L9" target="_blank" rel="noopener">.gitignore:9</a>)。
+- <code>transport/data/transport_dataset.csv</code> — 最終出力。15,479 行 × 19 列(上記 7 列 + MP 由来 10 列 + 換算 σ 2 列)、utf-8-sig。</p>
+<p>単位: ゼーベック係数 µV/K、σ/τ は 1/(fΩ·m·s)、換算後の σ は S/m、E_hull は eV/atom、密度 g/cm³、体積 Å³。</p>
+<h3 id="02_get_transport_data-h4">3. 関数ごとの解説</h3>
+<p><strong><code>fetch_carrier_transport() -&gt; pd.DataFrame</code></strong>(50-97 行)</p>
+<p>キャッシュ <code>carrier_transport_raw.csv</code> が存在すればそれを読んで即座に返す(52-54 行)。<strong>API に接続するのは初回のみ</strong>である。初回は <code>query_contributions(query={"project": "carrier_transport", "data__metal__exact": "No"}, ..., paginate=True)</code> で全ページを取得し、入れ子 dict を安全に辿る内部関数 <code>_val</code> で値を取り出し、<code>drop_duplicates(subset="material_id")</code> で mp-id 重複を除去して保存する(93-95 行)。計算量は取得件数 $N=30{,}467$ に対して $O(N)$、実時間は API のページネーション(数分)が支配的。</p>
+<p><strong><code>fetch_mp_summary(material_ids: list[str], chunk_size: int = 1000) -&gt; pd.DataFrame</code></strong>(100-150 行)</p>
+<p>mp-id のリストを <code>chunk_size</code>(既定 1000)件ずつに分割して <code>materials.summary.search(material_ids=chunk, ...)</code> を呼ぶ。分割は API のクエリ長制限を超えないための処置。2017 年当時の mp-id が現行 MP に存在しない場合、その id の応答が返らないため、この段階で自然に脱落する(30,467 → 22,623 件)。<code>volume_per_atom_A3 = volume / nsites</code> の派生列をここで作る(144 行)。引数 <code>chunk_size</code> は結果に影響せず、リクエスト回数(⌈N/chunk_size⌉)だけを変える。</p>
+<p><strong><code>main()</code></strong>(153-197 行)</p>
+<p>5 段の処理を順に適用する。件数は 2026-09-15 時点のスナップショット(作者回答により固定値として扱う):</p>
+<ol>
+<li>MPContribs 取得: 30,467 件</li>
+<li>MP summary と内部結合(<code>merge(..., how="inner")</code>、160 行): → 22,623 件</li>
+<li>安定相フィルタ(165-166 行): $E_{\mathrm{hull}} \le 0.05$ eV/atom、かつ欠損は除外 → 15,682 件</li>
+<li>半導体フィルタ(171 行): MP 登録<a class="wl" href="#g-バンドギャップ">バンドギャップ</a> $E_g^{\mathrm{MP}} &gt; 0$ → 15,479 件</li>
+<li>目的変数 4 列(S の p/n、σ/τ の p/n)の欠損行を除外(176-177 行。現データでは 0 行削除)し、σ を単位換算(180-181 行)。</li>
+</ol>
+<p>換算の根拠(45-47 行のコメント): Ricci データセットの σ は<a class="wl" href="#g-定緩和時間近似">定緩和時間近似</a>の下で緩和時間 $\tau$ により規格化された $\sigma/\tau$(単位 $1/(\mathrm{f\Omega \cdot m \cdot s}) = 10^{15}\,\Omega^{-1}\mathrm{m}^{-1}\mathrm{s}^{-1}$)である。$\tau = 10^{-14}\,\mathrm{s}$ を掛け戻すと</p>
+<p>$$\sigma\,[\mathrm{S/m}] = \underbrace{(\sigma/\tau)_{\rm raw}}_{\texttt{sigma\_over\_tau\_p/n}} \times 10^{15} \times 10^{-14} = 10 \times (\sigma/\tau)_{\rm raw}$$</p>
+<p>これがコードの <code>SIGMA_UNIT_FACTOR = 10.0</code>(47 行)である。最後に代表的<a class="wl" href="#g-熱電材料">熱電材料</a>(Bi₂Te₃, Mg₂Si, CoSb₃, ZrNiSn)の残存を表示して健全性を確認する(188-197 行)。</p>
+<h3 id="02_get_transport_data-h5">4. なぜこの処理が必要か</h3>
+<p><strong>物理側</strong>: 目的変数(<a class="wl" href="#g-BoltzTraP">BoltzTraP</a> 計算の S と σ/τ)と特徴量の素材(登録バンドギャップ等)は別のデータベースに分かれて存在し、MP 本体 API には輸送物性が一切無い(docs/DATA_SOURCES.md で全 69 フィールドを列挙して確認済み)。結合しなければ学習データが成立しない。E_hull フィルタは合成可能性の低い仮想構造を、$E_g &gt; 0$ フィルタは金属(ゼーベック係数の振る舞いが本質的に異なる)を除く。</p>
+<p><strong>機械学習側</strong>: <code>metal=No</code> フラグは 2017 年の計算に基づくため、現行 MP で $E_g = 0$ に更新された材料が混ざる。フィルタ 4 は特徴量(<code>band_gap_mp_eV</code>)と母集団の定義を一致させ、「半導体のみ」という学習条件を特徴量側の値で保証する。</p>
+<h3 id="02_get_transport_data-h6">5. この処理を外したらどうなるか</h3>
+<ul>
+<li>ファイルごと外す: <code>transport_dataset.csv</code> が生成されず、featurize.py 以降(37 行の <code>read_csv</code>)が <code>FileNotFoundError</code> で停止する。パイプライン全体が動かない。</li>
+<li>フィルタ 3(E_hull)だけ外す: 行数が 22,623 に増え、準安定・仮想構造が学習に混入する。精度指標への影響は再実験しないと不明(コードからは判断不能)。</li>
+<li>フィルタ 4($E_g&gt;0$)だけ外す: $E_g=0$ の 203 行(15,682−15,479)が混入し、「バンドギャップ→輸送物性」という設計前提の母集団定義が崩れる。</li>
+<li>σ 換算(180-181 行)だけ外す: 後段は <code>sigma_p_S_m</code> 列名を直接参照するため(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L24" target="_blank" rel="noopener">featurize.py:24</a>)<code>KeyError</code> で停止する。なお換算は定数倍なので、<a class="wl" href="#g-対数変換">対数変換</a>後は切片が 1 ずれるだけであり、モデルの<a class="wl" href="#g-決定係数">決定係数</a>には影響しない。</li>
+</ul>
+</article>
+
+<article class="doc" id="doc-03_featurize">
+<header class="doc-head"><span class="doc-num">03</span><h1>transport/featurize.py(特徴量テーブル生成)</h1><a class="src" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py" target="_blank" rel="noopener">transport/featurize.py</a></header>
+<h3 id="03_featurize-h1">0. 図中の対応箇所</h3>
+<p>図のノード <code>featurize.py(Magpie統計量 + MP登録値)</code> に対応。流入エッジ <code>transport_dataset.csv →(組成式・登録値)</code>、流出エッジ <code>→ features_dataset.csv(145特徴量に変換)</code>。図との相違は無い。</p>
+<h3 id="03_featurize-h2">1. このファイルの役割</h3>
+<p><code>transport_dataset.csv</code> の各行(1 材料)を、機械学習モデルが受け取れる数値ベクトルに変換する。組成式から計算する <a class="wl" href="#g-Magpie記述子">Magpie記述子</a> 132 次元と、MP 登録値に由来するスカラー 13 次元を横に連結し、<a class="wl" href="#g-目的変数">目的変数</a> 4 列・メタ 2 列と共に <code>features_dataset.csv</code> として保存する。ステージ2・3 は<strong>この同一テーブルを共用</strong>する。</p>
+<h3 id="03_featurize-h3">2. 入力と出力</h3>
+<p><strong>入力</strong>: <code>transport/data/transport_dataset.csv</code>(15,479 行 × 19 列)。使用する列は <code>formula_pretty</code>(str、組成式)、<code>SCALAR_FEATURES</code> の 5 列(27-33 行: band_gap_mp_eV [eV], density_g_cm3 [g/cm³], volume_per_atom_A3 [Å³], nsites [個], spacegroup_number [整数 1–230])、<code>is_gap_direct</code>(bool)、<code>crystal_system</code>(str、7 値)。</p>
+<p><strong>出力</strong>: <code>transport/data/features_dataset.csv</code>(15,479 行 × 151 列、git 管理外)。列構成:</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>区分</th>
+<th>列数</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>メタ</td>
+<td>2</td>
+<td>material_id, formula_pretty</td>
+</tr>
+<tr>
+<td>目的変数</td>
+<td>4</td>
+<td>seebeck_p_uV_K, seebeck_n_uV_K, sigma_p_S_m, sigma_n_S_m</td>
+</tr>
+<tr>
+<td>スカラー特徴量</td>
+<td>5</td>
+<td>SCALAR_FEATURES(上記)</td>
+</tr>
+<tr>
+<td>フラグ</td>
+<td>1</td>
+<td>is_gap_direct_int(0.0/1.0)</td>
+</tr>
+<tr>
+<td><a class="wl" href="#g-one-hotエンコーディング">one-hotエンコーディング</a></td>
+<td>7</td>
+<td>crystal_Cubic … crystal_Triclinic(0.0/1.0)</td>
+</tr>
+<tr>
+<td>Magpie</td>
+<td>132</td>
+<td>元素物性 22 種 × 統計量 6 種</td>
+</tr>
+</tbody>
+</table></div>
+<p>特徴量は計 145 次元。全列 float(メタ以外)。中間ファイル・他の副作用は無い。</p>
+<h3 id="03_featurize-h4">3. 関数ごとの解説</h3>
+<p>このファイルの関数は <code>main()</code>(36-71 行)のみ。処理は 4 段からなる。</p>
+<p><strong>(1) 組成オブジェクト化</strong>(42-44 行): <a class="wl" href="#g-matminer">matminer</a> の <code>StrToComposition</code> が <code>formula_pretty</code> 文字列を pymatgen の Composition に変換する。<code>ignore_errors=True</code> のため解釈不能な組成は例外ではなく NaN になり、後段の dropna で行ごと落ちる。</p>
+<p><strong>(2) Magpie 記述子</strong>(45-47 行): <code>ElementProperty.from_preset("magpie")</code>。組成に含まれる元素集合を $E$、元素 $e$ の原子分率を $x_e$($\sum_{e \in E} x_e = 1$)、元素物性(原子番号、融点、電気陰性度、価電子数、未充填軌道数など 22 種)の値を $p_e$ とすると、物性ごとに次の 6 統計量を出す:</p>
+<p>$$\mathrm{mean} = \sum_{e \in E} x_e\, p_e,\qquad \mathrm{avg\_dev} = \sum_{e \in E} x_e\, |p_e - \mathrm{mean}|$$</p>
+<p>$$\mathrm{min} = \min_{e \in E} p_e,\quad \mathrm{max} = \max_{e \in E} p_e,\quad \mathrm{range} = \mathrm{max} - \mathrm{min},\quad \mathrm{mode} = p_{e^*}\ (e^* = \arg\max_e x_e)$$</p>
+<p>mean と avg_dev は分率加重、min/max/range は存在元素上の非加重統計、mode は最多分率元素の値である。$22 \times 6 = 132$ 列。列名は <code>MagpieData mean NdUnfilled</code> のような形式で、metrics.json の top10_features に現れる名前と一致する。</p>
+<p><strong>(3) 構造スカラー</strong>(50-54 行): <code>is_gap_direct</code> を float 化し、<code>pd.get_dummies</code> で <code>crystal_system</code> を 7 列の 0/1 に展開する。<a class="wl" href="#g-ランダムフォレスト">ランダムフォレスト</a>を含む scikit-learn の回帰器は文字列カテゴリを受け取れないため数値化が必須。space­group_number は 1–230 の整数ラベルをそのまま連続値として与えている(順序に物理的意味は部分的にしかない。設計判断は <a href="#doc-91_design_decisions">91_design_decisions.md</a>)。</p>
+<p><strong>(4) 選別と保存</strong>(64-69 行): メタ + 目的変数 + 特徴量 151 列に絞り、<code>dropna()</code> で欠損行を除外して保存する。現データでは除外 0 行(15,479 → 15,479)。</p>
+<p>計算量: Magpie 計算は行数 $N$ と元素数に対して線形で、<code>featurize_dataframe</code> の 2 回のパス(マルチプロセス)が実行時間の大半を占める(数分)。</p>
+<h3 id="03_featurize-h5">4. なぜこの処理が必要か</h3>
+<p><strong>物理側</strong>: <a class="wl" href="#g-ゼーベック係数">ゼーベック係数</a>や<a class="wl" href="#g-電気伝導率">電気伝導率</a>は結晶の電子構造で決まるが、電子構造そのものを入力にすると<a class="wl" href="#g-DFT">DFT</a> 計算が必要になり、代替という目的に反する。組成の元素統計(電気陰性度・価電子数など)と構造スカラー(密度・空間群)は、計算済みデータベース値と組成式だけから求まる安価な<a class="wl" href="#g-記述子">記述子</a>であり、電子構造の代理情報になる。同じ <a class="wl" href="#g-BoltzTraP">BoltzTraP</a> 計算に由来する<a class="wl" href="#g-有効質量">有効質量</a> $m^*$ を意図的に除外している(7-9 行のコメント)のは、目的変数と生成元を共有する量を入力に使うと<a class="wl" href="#g-データリーク">データリーク</a>になるためである。</p>
+<p><strong>機械学習側</strong>: モデルは固定長の数値ベクトルしか受け取れない。可変長の組成式を 132 次元の固定長統計量へ写像するのが Magpie の役割で、これにより任意の無機組成を同一のモデルに入力できる。</p>
+<h3 id="03_featurize-h6">5. この処理を外したらどうなるか</h3>
+<ul>
+<li>ファイルごと外す: <code>features_dataset.csv</code> が無く <a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L189" target="_blank" rel="noopener">train.py:189</a> が <code>FileNotFoundError</code> で停止。</li>
+<li>Magpie 132 列だけ外す: 特徴量が 13 次元になる。metrics.json の top10_features では Magpie 列が S_n で 10 中 8、σ_n で 10 中 7 を占めており、主要な説明変数群を失う。精度低下の定量値は再実験が必要(コードからは判断不能)。</li>
+<li>one-hot を外して <code>crystal_system</code> を文字列のまま含める: <code>model.fit</code> が ValueError で停止する。列ごと落とすなら 7 次元の情報損失で済み、動作はする。</li>
+<li><code>dropna()</code> を外す: 現データでは影響なし(欠損 0)。組成解釈に失敗する行が将来混入した場合、RandomForestRegressor が NaN を受けて ValueError で停止する。</li>
+</ul>
+</article>
+
+<article class="doc" id="doc-04_train">
+<header class="doc-head"><span class="doc-num">04</span><h1>transport/train.py(ステージ2・3: 学習・評価・SHAP)</h1><a class="src" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py" target="_blank" rel="noopener">transport/train.py</a></header>
+<h3 id="04_train-h1">0. 図中の対応箇所</h3>
+<p>図のノード <code>train.py(RandomForest --stage 2/3)</code> と <code>transport/results/(metrics.json・model・SHAP)</code>、エッジ <code>features_dataset.csv →(学習入力)</code>・<code>→ transport/results/(モデル・指標・SHAP)</code> に対応。図ではステージ2と3が 1 ノードに統合されているが、コードでは別々の実行・別々の出力ディレクトリである(<a href="#doc-00_verify">00_verify.md</a> の粒度の注記)。</p>
+<h3 id="04_train-h2">1. このファイルの役割</h3>
+<p><code>features_dataset.csv</code> を入力に、<a class="wl" href="#g-目的変数">目的変数</a> 1 つにつき 1 本の<a class="wl" href="#g-ランダムフォレスト">ランダムフォレスト</a>回帰モデルを学習・評価する。<code>--stage 2</code> で<a class="wl" href="#g-ゼーベック係数">ゼーベック係数</a>(p 型・n 型)、<code>--stage 3</code> で<a class="wl" href="#g-電気伝導率">電気伝導率</a>(log₁₀σ の p 型・n 型)を扱い、計 4 モデルになる。ステージ3 はステージ2 の予測値を<strong>使わない</strong>(カスケード禁止)。あわせて <a class="wl" href="#g-SHAP">SHAP</a> による特徴量寄与の定量化と成果物一式の保存を行う。</p>
+<h3 id="04_train-h3">2. 入力と出力</h3>
+<p><strong>入力</strong>: <code>transport/data/features_dataset.csv</code>(15,479 行 × 151 列)。特徴量は「メタ 2 列 + 目的変数 4 列を除く全列」として動的に決まる(190 行)= 145 列。CLI 引数 <code>--stage {2,3}</code>。</p>
+<p><strong>出力</strong>(<code>transport/results/stage2_seebeck/</code> または <code>stage3_conductivity/</code>):</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>ファイル</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model_{target}.joblib</code></td>
+<td>学習済みモデル(compress=3、各約 45 MB、git 管理外)</td>
+</tr>
+<tr>
+<td><code>metrics.json</code></td>
+<td>2 ターゲット分の指標リスト(n_train/n_test, test MAE/RMSE/R², CV R² 平均・標準偏差, band_gap_shap_rank, top10_features)</td>
+</tr>
+<tr>
+<td><code>parity_{target}.png</code></td>
+<td><a class="wl" href="#g-パリティプロット">パリティプロット</a>(150 dpi)</td>
+</tr>
+<tr>
+<td><code>shap_summary_{target}.png</code></td>
+<td>SHAP beeswarm 図</td>
+</tr>
+<tr>
+<td><code>shap_importance_{target}.csv</code></td>
+<td>145 特徴量の重要度ランキング(feature, mean_abs_shap, rank)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="04_train-h4">3. 関数ごとの解説</h3>
+<p><strong><code>train_one_target(df, feature_cols, target, log_transform, label, out_dir) -&gt; dict</code></strong>(121-177 行)</p>
+<p>ステージ3 のみ<a class="wl" href="#g-対数変換">対数変換</a>を適用する(127-130 行)。$y_i$ を材料 $i$ の目的変数値として</p>
+<p>$$y_i^{\rm (fit)} = \log_{10} \sigma_i \quad (\sigma_i &gt; 0 \text{ の行のみ。現データでは全行が正})$$</p>
+<p><a class="wl" href="#g-train-test分割">train/test分割</a>は <code>train_test_split(X, y, test_size=0.2, random_state=SEED)</code>(133-135 行)。$N = 15{,}479$ が train 12,383 / test 3,096 に無作為分割される。分割は行単位であり、同一組成の<a class="wl" href="#g-多形">多形</a>が train と test に分かれて入り得る(この含意は <a href="#doc-92_audit">92_audit.md</a>)。</p>
+<p>モデルは <code>RandomForestRegressor(n_estimators=300, min_samples_leaf=2, random_state=SEED, n_jobs=-1)</code>(138-140 行)。$B = 300$ 本の回帰木 $T_b$ をブートストラップ標本で学習し、予測は平均:</p>
+<p>$$\hat y(x) = \frac{1}{B} \sum_{b=1}^{B} T_b(x)$$</p>
+<p><code>min_samples_leaf=2</code> は葉に最低 2 標本を要求して過剰な深さを抑える。評価指標(144-147 行)は、テスト集合の $n = 3{,}096$ 行に対して</p>
+<p>$$\mathrm{MAE} = \frac{1}{n}\sum_{i}|y_i - \hat y_i|,\qquad \mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i}(y_i - \hat y_i)^2},\qquad R^2 = 1 - \frac{\sum_i (y_i - \hat y_i)^2}{\sum_i (y_i - \bar y)^2}$$</p>
+<p>($\bar y$ はテスト集合の平均)。<a class="wl" href="#g-交差検証">交差検証</a>は<strong>訓練側 12,383 行のみ</strong>を 5 分割し(150-151 行、シャッフル無しの KFold)、fold ごとに新しいモデルを学習して $R^2$ の平均と標準偏差を報告する。テスト集合は CV に関与しない。</p>
+<p>引数の影響: <code>log_transform=True</code> は σ の数桁のレンジを圧縮し、大きい値への二乗誤差の偏重を防ぐ。<code>test_size</code> を変えると n_train/n_test と全指標が変わる。<code>SEED=42</code> 固定により分割・木構造・CV が決定的で、metrics.json は再実行で同一値になる(入力 CSV が同一である限り)。計算量は木 1 本あたり $O(m \cdot n \log n)$($m=145$ 特徴量、$n$=訓練行数)で、それが $B \times (1 + 5)$ 回(本体 + CV)走る。実行時間は数分、fit が支配的。</p>
+<p><strong><code>shap_analysis(model, X_test, target, out_dir) -&gt; pd.DataFrame</code></strong>(98-118 行)</p>
+<p>テスト集合から最大 <code>SHAP_SAMPLE_SIZE = 1000</code> 行を抽出し、<a class="wl" href="#g-TreeExplainer">TreeExplainer</a> で SHAP 値 $\phi_{ij}$(標本 $i$ における特徴量 $j$ の寄与)を厳密計算する。SHAP の加法性</p>
+<p>$$\hat y(x_i) = \phi_0 + \sum_{j=1}^{145} \phi_{ij}$$</p>
+<p>($\phi_0$ は学習データ平均に対応する基準値)により、予測値が特徴量ごとの寄与に分解される。重要度は標本平均絶対値 $I_j = \frac{1}{1000}\sum_i |\phi_{ij}|$ で(112-115 行)、降順ランキングを CSV 保存する。<code>check_additivity=False</code> は数値誤差チェックの無効化で値自体は変えない。</p>
+<p><strong><code>parity_plot(...)</code></strong>(73-95 行): 横軸に BoltzTraP 値、縦軸に予測値を等スケールで描き、対角線 $\hat y = y$ を参照線とする散布図。</p>
+<p><strong><code>main()</code></strong>(180-201 行): <code>STAGE_CONFIG</code>(48-67 行)からターゲット 2 つと変換フラグを取り、順に <code>train_one_target</code> を実行して metrics.json に書く。</p>
+<h3 id="04_train-h5">4. なぜこの処理が必要か</h3>
+<p><strong>物理側</strong>: 学習済みモデルは <a class="wl" href="#g-DFT">DFT</a>+<a class="wl" href="#g-BoltzTraP">BoltzTraP</a> という高コスト計算の代替(サロゲート)である。SHAP による <code>band_gap_mp_eV</code> の順位(S で 1 位、σ で 4/7 位)は、「<a class="wl" href="#g-バンドギャップ">バンドギャップ</a>が輸送物性を駆動する」という設計時の物理仮説をデータで定量化する役割を持つ。</p>
+<p><strong>機械学習側</strong>: ランダムフォレストはスケーリング不要・非線形・混合スケールの 145 特徴量をそのまま扱え、TreeExplainer による厳密 SHAP 計算と両立する。CV はテスト 1 回分割の偶然性を補い、平均 ± 標準偏差で汎化性能の安定性を示す。</p>
+<h3 id="04_train-h6">5. この処理を外したらどうなるか</h3>
+<ul>
+<li>ファイルごと外す: モデル・metrics.json が生成されず、<code><a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py#L63" target="_blank" rel="noopener">web/build_data.py:63</a></code> が metrics.json を読めず <code>FileNotFoundError</code> で停止。</li>
+<li>対数変換を外す(σ を線形で学習): 目的変数が約 5 桁のレンジを持つため二乗誤差が大値側に支配され、$R^2$ の意味が変質する。定量的な低下幅は再実験が必要。</li>
+<li>CV を外す: 動作・保存物は metrics.json の cv_* 2 項目が欠けるだけだが、単一分割の R² のみとなり評価の信頼区間を失う。</li>
+<li>SHAP を外す: band_gap_shap_rank が計算できず 162 行で KeyError。README とダッシュボードの中心的主張(E_g SHAP 1 位)の根拠が消える。</li>
+</ul>
+</article>
+
+<article class="doc" id="doc-05_build_data">
+<header class="doc-head"><span class="doc-num">05</span><h1>web/build_data.py(ダッシュボード用データ書き出し)</h1><a class="src" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py" target="_blank" rel="noopener">web/build_data.py</a></header>
+<h3 id="05_build_data-h1">0. 図中の対応箇所</h3>
+<p>図のノード <code>build_data / build_single(CSV・JSON → 埋め込みJS)</code> の前半に対応。流入エッジは <code>transport_dataset.csv →(実データ)</code> と <code>transport/results/ →(精度指標)</code>。出力先である <code>web/data/dataset.js</code>・<code>web/data/results.js</code> は図にノードとして描かれていない(<a href="#doc-00_verify">00_verify.md</a> の欠落 3)。</p>
+<h3 id="05_build_data-h2">1. このファイルの役割</h3>
+<p>パイプラインの成果物(データセット CSV、metrics.json、SHAP ランキング CSV)を、ブラウザが <code>&lt;script src&gt;</code> で読める JavaScript ファイル 2 つに変換する。作者回答(2026-09-15)により配布の正は <code>web/index.html</code> の直接オープンであり、このスクリプトの出力がその表示データの全てになる。</p>
+<h3 id="05_build_data-h3">2. 入力と出力</h3>
+<p><strong>入力</strong>
+- <code>transport/data/transport_dataset.csv</code>(15,479 行 × 19 列。17 行)
+- <code>transport/results/{stage2_seebeck,stage3_conductivity}/metrics.json</code>(62-63 行)
+- 同ディレクトリの <code>shap_importance_{target}.csv</code> × 4(66-67 行)</p>
+<p><strong>出力</strong>(<code>web/data/</code>、いずれも JSON を JS グローバル代入文で包んだもの)
+- <code>dataset.js</code> — <code>window.MILAB_DATA = {columns: [...], rows: [[...], ...]}</code>。列指向ではなく<strong>行配列</strong>の配列で、1 行 = 14 要素(material_id, formula, band_gap_eV, is_gap_direct, seebeck_p, seebeck_n, log10_sigma_p, log10_sigma_n, density, volume_per_atom, nsites, spacegroup, crystal_system, e_hull_meV)。実測 1.49 MB。
+- <code>results.js</code> — <code>window.MILAB_RESULTS = {metrics: {target: {...}}, shap: {target: {n_features, top: [...]}}}</code>。metrics.json の全項目と、SHAP 上位 15 件のみ。</p>
+<h3 id="05_build_data-h4">3. 関数ごとの解説</h3>
+<p>ファイルはスクリプト直書きで、関数は丸め用の <code>r(x, nd)</code>(19-20 行)のみ: <code>pd.isna(x)</code> なら <code>None</code>(JSON では null)、そうでなければ <code>round(float(x), nd)</code>。</p>
+<p><strong>dataset 生成</strong>(22-51 行): 各行のタプルを固定順の配列に写像する。数値は列ごとに桁を落として転送量を削る(band_gap 4 桁、seebeck 1 桁、density 3 桁など)。σ はここで<a class="wl" href="#g-対数変換">対数変換</a>される(37-38 行):</p>
+<p>$$\texttt{log10\_sigma\_p} = \mathrm{round}(\log_{10} \sigma_p^{\rm [S/m]},\ 3)$$</p>
+<p>すなわちダッシュボードが表示する σ は学習時と同じ log₁₀ スケールである。<a class="wl" href="#g-energy-above-hull">energy above hull</a> は eV/atom から meV/atom へ換算する(44 行、$\times 1000$)。書き出しは <code>json.dumps(..., separators=(",", ":"))</code> で空白を除去し、<code>window.MILAB_DATA=...;</code> の代入文にする(50-51 行)。JSON ファイルを <code>fetch</code> で読む方式にしなかったのは、<code>file://</code> で開いたときに fetch がブロックされるためで、<code>&lt;script&gt;</code> 読み込みならローカルの二重クリックでも動く(49 行のコメント)。</p>
+<p><strong>results 生成</strong>(53-76 行): 2 ステージの metrics.json を連結して target 名で引ける dict にし、SHAP ランキングは各 145 行のうち <code>head(15)</code> だけを <code>{feature, value}</code> の配列で持つ。<code>n_features: 145</code> は UI の「/ 145」表示の分母になる。</p>
+<p>計算量: 15,479 行の 1 パス変換で $O(N)$、実行は数秒。</p>
+<h3 id="05_build_data-h5">4. なぜこの処理が必要か</h3>
+<p><strong>物理側</strong>: 固有の物理計算は無い。σ の log₁₀ 化は、数桁にわたる量を軸上で読めるようにする表示上の必然で、学習時の変換(<a href="#doc-04_train">04_train.md</a>)と目盛りを一致させる。</p>
+<p><strong>機械学習側</strong>: これも固有の学習処理は無いが、「学習に使った 15,479 行そのもの」を可視化する経路である点が重要。ダッシュボードの散布図・KPI・SHAP 表示は、このスクリプトが機械的に転記した値であり、手書きの数値ではない(例外は app.js 内のハードコード。<a href="#doc-07_app">07_app.md</a> 参照)。</p>
+<h3 id="05_build_data-h6">5. この処理を外したらどうなるか</h3>
+<p><code>web/data/*.js</code> が存在しない・古いままの場合、ページ自体は開くが <code>window.MILAB_DATA</code> が undefined になり、app.js の boot(640-647 行)が「データの読み込みに失敗しました。<code>python web/build_data.py</code> で web/data/ を生成してください。」と表示して初期化を中断する。再学習後にこのスクリプトを実行し忘れると、<strong>エラーは出ずに旧データが表示され続ける</strong>(ファイルが残っているため)。metrics.json だけ更新して dataset.js を作り直さない、といった部分的な実行でも同様に新旧混在が起きる。数値の劣化としては丸めのみで、誤差は最終表示桁の半分未満(例: band_gap は 0.00005 eV 未満)である。</p>
+</article>
+
+<article class="doc" id="doc-06_build_single">
+<header class="doc-head"><span class="doc-num">06</span><h1>web/build_single.py(単一ファイルバンドル)</h1><a class="src" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py" target="_blank" rel="noopener">web/build_single.py</a></header>
+<h3 id="06_build_single-h1">0. 図中の対応箇所</h3>
+<p>図のノード <code>build_data / build_single</code> の後半と、エッジ <code>→ milab-dashboard.html(1ファイルに合体)</code> に対応。図に無い入力として <code>web/index.html</code>・<code>style.css</code>・<code>app.js</code>(手書きソース)と <code>web/assets/parity_*.png</code>、図に無い第 2 出力として <code>--fragment</code> がある(<a href="#doc-00_verify">00_verify.md</a> の欠落 4・5・6)。作者回答(2026-09-15)により、これは副次的な配布形態であり、正は <code>web/index.html</code> の直接オープンである。</p>
+<h3 id="06_build_single-h2">1. このファイルの役割</h3>
+<p><code>web/</code> 配下に分かれている HTML・CSS・JS・データ JS・パリティ画像 4 枚を、外部参照ゼロの単一 HTML ファイルに合成する。出力 <code>web/dist/milab-dashboard.html</code> は依存ファイル無しで開けるため、メール添付や単独ファイルでの配布に使う。</p>
+<h3 id="06_build_single-h3">2. 入力と出力</h3>
+<p><strong>入力</strong>(すべて <code>web/</code> 相対、24-38 行)
+- <code>index.html</code>(骨格)、<code>style.css</code>、<code>app.js</code>
+- <code>data/dataset.js</code>、<code>data/results.js</code>(<a href="#doc-05_build_data">05_build_data.md</a> の出力)
+- <code>assets/parity_*.png</code> × 4 — <strong>transport/results/ から作者が手動でコピーしたファイル</strong>(コピー処理はコードに存在しない。2026-09-15 作者確認)
+- CLI 引数 <code>--fragment PATH</code>(任意、20-22 行)</p>
+<p><strong>出力</strong>
+- <code>web/dist/milab-dashboard.html</code> — 自己完結の 1 ファイル(実測 2.15 MB)
+- <code>--fragment</code> 指定時のみ: doctype/html/head/body の殻を持たない埋め込み用断片を指定パスへ追加出力(60-68 行)</p>
+<h3 id="06_build_single-h4">3. 関数ごとの解説</h3>
+<p>関数定義は無く、スクリプト直書きの逐次処理である。</p>
+<p><strong>(1) 画像の data URI 化</strong>(30-40 行): PNG のバイト列 $b$ を Base64 符号化し、<code>data:image/png;base64,...</code> 形式の文字列にして <code>window.MILAB_PARITY = {target: dataURI}</code> という JS 代入文を組み立てる。Base64 は 3 バイトを 4 文字に写像するため、埋め込み後のサイズは元の $\lceil 4/3 \rceil$ 倍(約 +33%)になる。app.js 側は <code>MILAB_PARITY</code> が定義されていればそれを優先し、無ければ <code>assets/</code> への相対パスを使う(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js#L620-L622" target="_blank" rel="noopener">app.js:620-622</a>)ので、同じ app.js が分離版・バンドル版の両方で動く。</p>
+<p><strong>(2) スクリプト終端タグの検査</strong>(42-43 行): インライン化する各 JS 文字列に <code>&lt;/script</code> が含まれないことを assert で確認する。含まれているとブラウザがそこで <code>&lt;script&gt;</code> ブロックを打ち切り、以降が HTML として解釈されるため、破損した(かつ潜在的に任意コードが混入し得る)ページになる。データ由来の文字列を HTML に埋め込む際の防御である。</p>
+<p><strong>(3) HTML の組み替え</strong>(45-57 行): <code>index.html</code> を <code>&lt;body&gt;</code> で 2 分割し、(a) body 内の <code>&lt;script src="..."&gt;</code> 3 行を正規表現で除去、(b) head 内の <code>&lt;link rel="stylesheet"&gt;</code> を <code>&lt;style&gt;</code> インライン化で置換、(c) body 末尾に dataset.js → results.js → parity → app.js の順で <code>&lt;script&gt;</code> ブロックを連結する。この順序は依存関係そのもので、app.js の boot が実行される時点で 3 つのグローバル(<code>MILAB_DATA</code>、<code>MILAB_RESULTS</code>、<code>MILAB_PARITY</code>)が定義済みであることを保証する。</p>
+<p><strong>(4) フラグメント出力</strong>(60-68 行): <code>&lt;title&gt;</code> を正規表現で抜き出し、殻タグ抜きで title + meta + style + body + scripts を並べたファイルを書く。ホスト側が独自の HTML 骨格を持つ環境(ブログ等)への埋め込み用。</p>
+<p>計算量: 文字列連結と Base64 のみで $O(\text{総バイト数})$、1 秒未満。</p>
+<h3 id="06_build_single-h5">4. なぜこの処理が必要か</h3>
+<p><strong>物理側</strong>: 物理計算は無い。</p>
+<p><strong>機械学習側/配布側</strong>: 分離版(<code>web/index.html</code> + 5 ファイル)はディレクトリ構造ごと渡す必要があり、単独の HTML だけ送ると画像とデータが欠ける。成果を 1 ファイルで受け渡すには全アセットのインライン化が必要で、これは学習成果(データ・指標・SHAP・パリティ図)を欠損なく同梱する唯一の経路である。</p>
+<h3 id="06_build_single-h6">5. この処理を外したらどうなるか</h3>
+<p>正の配布形態(<code>web/index.html</code> 直接)は build_single 無しで完結するため、<strong>外してもダッシュボードの機能・表示内容は失われない</strong>。失われるのは単一ファイル配布の選択肢のみ。逆依存も無く、他のスクリプトは <code>dist/</code> を読まない。部分的な劣化モードとして、(1) <code>build_data.py</code> を再実行した後に build_single を再実行しないと <code>dist/</code> だけ旧データのまま残る、(2) <code>web/assets/</code> の PNG を手動更新し忘れると、分離版・バンドル版ともパリティ図だけ旧学習結果を表示する(データと図の不整合はエラーにならず気づきにくい)、の 2 つがある。</p>
+</article>
+
+<article class="doc" id="doc-07_app">
+<header class="doc-head"><span class="doc-num">07</span><h1>web/app.js(ダッシュボード本体。付: index.html / style.css)</h1><a class="src" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js" target="_blank" rel="noopener">web/app.js</a></header>
+<h3 id="07_app-h1">0. 図中の対応箇所</h3>
+<p>元の図に対応ノードが無い(<a href="#doc-00_verify">00_verify.md</a> の欠落 4)。修正版 mermaid の <code>web/index.html + style.css + app.js(手書き。非バンドル版としてそのまま動作)</code> ノードに対応する。作者回答(2026-09-15)により、この非バンドル版が配布の正である。</p>
+<h3 id="07_app-h2">1. このファイルの役割</h3>
+<p>依存ライブラリ無しの単一 JS(655 行)で、3 ビュー(概要 / エクスプローラー / モデル評価)の SPA を実装する。<code>build_data.py</code> が書き出したグローバル <code>MILAB_DATA</code>(15,479 行)と <code>MILAB_RESULTS</code>(指標・SHAP)を読み、散布図・表・KPI・SHAP バーを描画する。<code>index.html</code> は静的な骨格(215 行)、<code>style.css</code> はテーマ変数と装飾(557 行)で、いずれも関数を持たない。</p>
+<h3 id="07_app-h3">2. 入力と出力</h3>
+<p><strong>入力</strong>: <code>window.MILAB_DATA</code>(行配列。列位置は定数 <code>C</code> で参照、20-24 行)、<code>window.MILAB_RESULTS</code>、任意で <code>window.MILAB_PARITY</code>(バンドル版のみ)、パリティ PNG(分離版は <code>assets/</code> 相対パス、57-61 行)、URL ハッシュ(<code>#overview</code> 等)。<strong>出力</strong>: DOM と Canvas 2D への描画のみ。ファイル・ネットワーク・ストレージへの書き込みは無い(外部リンクは MP の材料ページのみ、491 行)。</p>
+<h3 id="07_app-h4">3. 関数ごとの解説</h3>
+<p>数値計算を含む関数を主に説明する。純粋な DOM 組み立て(<code>renderOverview</code>、<code>initControls</code>、<code>renderTooltip</code>、<code>renderDetail</code>、<code>renderTable</code>、<code>initModels</code>、<code>renderModels</code>)は、状態 <code>state</code>(105-117 行)を読み、<code>el()</code> で要素を構築して差し替えるという同型の処理である。</p>
+<p><strong><code>rampBins(key)</code></strong>(132-143 行): 散布図の点の濃さ(6 段)を決める等頻度ビンを作る。対象列の全値をソートし、分位点関数を $Q(q) = \mathrm{vals}[\lfloor N q \rfloor]$ として、内部境界を</p>
+<p>$$e_i = Q\!\left(\frac{i}{6}\right),\quad i = 1, \dots, 5$$</p>
+<p>で取る。各ビンに全体の 1/6 ずつが入る。凡例の端は $Q(0.005)$ と $Q(0.995)$ で外れ値の影響を避ける。等幅ビンではなく等頻度にしている理由はコメント(127-131 行)にある通り、log₁₀σ などの分布が最頻値付近に集中しており、等幅では大半の点が 1 色に潰れるためである。ビンは<strong>全 15,479 行</strong>で計算し、フィルタ後の部分集合では再計算しない(フィルタ操作で生存点の色が変わらないようにするため)。<code>binCache</code> により列ごとに 1 回だけ計算する。</p>
+<p><strong><code>rampIndex(v, bins)</code></strong>(144-148 行): 値 $v$ に対しビン番号 $\min\{i : v &lt; e_i\}$(どの境界も超えれば 5)を返す線形探索。</p>
+<p><strong><code>niceTicks(min, max, n=6)</code></strong>(91-101 行): 軸目盛りの選択。生の刻み $s_0 = (\max - \min)/n$ に対し、$10^{\lfloor \log_{10} s_0 \rfloor}$ の {1, 2, 2.5, 5, 10} 倍のうち目盛り数が $n$ 以下になる最小の刻み $s$ を選び、$\lceil \min/s \rceil s$ から $s$ 刻みで並べる。</p>
+<p><strong><code>drawScatter()</code></strong>(288-388 行): Canvas への散布図描画。デバイスピクセル比でキャンバスを拡大してから、データ座標 $(v_x, v_y)$ を画素座標へ写すアフィン変換</p>
+<p>$$s_x(v) = \mathrm{pad}_l + \frac{v - x_{\min}}{x_{\max} - x_{\min}} \cdot iw,\qquad s_y(v) = \mathrm{pad}_t + \left(1 - \frac{v - y_{\min}}{y_{\max} - y_{\min}}\right) \cdot ih$$</p>
+<p>で全点を打つ($iw, ih$ は描画領域の幅・高さ。$y$ は画面座標が下向きのため反転)。軸範囲はフィルタ後の点の min/max に 3–5% の余白を足したもの。点は色ビンごとにまとめて描き、濃い側を後に描いて上に載せる(363-374 行)。点数 4,000 超で不透明度を 0.72 → 0.42 に落とす(366 行)。計算量は表示点数 $O(N)$。</p>
+<p><strong><code>nearestRow(mx, my)</code></strong>(396-406 行): ホバー・クリック対象の探索。全表示点との二乗距離 $d^2 = (s_x - m_x)^2 + (s_y - m_y)^2$ を線形走査し、$d^2 &lt; 24^2$ 画素以内で最小の点を返す。空間インデックスは使っておらず 1 回の走査は $O(N)$ だが、$N \le 15{,}479$ では実用上問題ない。</p>
+<p><strong><code>filteredRows()</code></strong>(119-125 行): <a class="wl" href="#g-結晶系">結晶系</a>フィルタ(<code>state.systems</code> の集合帰属)と検索文字列(組成式または <a class="wl" href="#g-mp-id">mp-id</a> の部分一致、小文字化)の論理積。</p>
+<p><strong><code>renderModels()</code></strong>(566-625 行): 選択ターゲットの指標(<a class="wl" href="#g-MAE">MAE</a>・<a class="wl" href="#g-RMSE">RMSE</a>・<a class="wl" href="#g-決定係数">決定係数</a>・<a class="wl" href="#g-交差検証">交差検証</a> R²・E_g の <a class="wl" href="#g-SHAP">SHAP</a> 順位)を KPI タイルに、SHAP 上位 15 件をバー(幅 $\propto I_j / I_1$、605 行)に描く。パリティ画像は <code>MILAB_PARITY</code>(バンドル版)→ <code>assets/</code> 相対パス(分離版)の順でフォールバックする(620-622 行)。</p>
+<p><strong><code>route()</code> / <code>boot()</code></strong>(6-16, 640-655 行): ハッシュでビューを切り替え、起動時にデータ欠如を検出してガイダンスを表示する。<code>ResizeObserver</code> でリサイズ時に再描画。</p>
+<h3 id="07_app-h5">4. なぜこの処理が必要か</h3>
+<p><strong>物理側</strong>: 新しい計算は無い。等頻度ビンと log₁₀ 軸は、桁で分布する物性値を視覚的に読み取り可能にするための表示変換である。</p>
+<p><strong>機械学習側</strong>: 学習結果の検証経路として機能する。散布図で $E_g$ と S の関係(小ギャップで S が抑制される<a class="wl" href="#g-バイポーラ伝導">バイポーラ伝導</a>傾向)を全数データで直接確認でき、SHAP バーとパリティ図はモデルの主張(E_g 1 位、R² の水準)を成果物から転記して見せる。</p>
+<h3 id="07_app-h6">5. この処理を外したらどうなるか</h3>
+<p>パイプラインの学習・評価(metrics.json まで)は無傷で残る。失われるのは可視化と対話的検証のみで、逆依存は <code>build_single.py</code> が app.js を読む 1 箇所(26 行)だけである(app.js が無ければバンドルも失敗する)。注意点として、<code>renderOverview</code>(151-190 行)の KPI「Features 145」「Best R² 0.757」と絞り込みファネルの 4 つの件数(30,467 / 22,623 / 15,682 / 15,479)は <strong><code>MILAB_RESULTS</code> からの転記ではなくハードコード</strong>であり、再学習で数値が変われば手動更新しない限り古い値を表示し続ける(<a href="#doc-92_audit">92_audit.md</a> 参照)。</p>
+</article>
+
+<article class="doc" id="doc-90_glossary">
+<header class="doc-head"><span class="doc-num">90</span><h1>用語集</h1></header>
+<p>物性物理側と機械学習側に分けて記載する。各項目は「定義 / このリポジトリでの使われ方 / 近接概念との差」の順。</p>
+<h2 id="90_glossary-h1">物性物理側</h2>
+<h3 id="g-バンドギャップ">バンドギャップ</h3>
+<p>価電子帯上端と伝導帯下端のエネルギー差 $E_g$ [eV]。$E_g &gt; 0$ なら絶縁体・半導体、$E_g = 0$ なら金属。/ 特徴量 <code>band_gap_mp_eV</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L28" target="_blank" rel="noopener">featurize.py:28</a>)として全モデルの入力になり、<code>band_gap_mp_eV &gt; 0</code> が半導体フィルタ(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L171" target="_blank" rel="noopener">get_transport_data.py:171</a>)。/ 本リポジトリには 3 種のバンドギャップが登場する: MP 登録値(<code>band_gap_mp_eV</code>、特徴量)、BoltzTraP 計算時の値(<code>band_gap_boltztrap_eV</code>、参考値で特徴量に不使用)、ステージ1 の <code>band_gap_eV</code>。混同しないこと。</p>
+<h3 id="g-直接遷移-間接遷移">直接遷移/間接遷移</h3>
+<p>価電子帯上端と伝導帯下端が運動量空間の同じ点にあれば直接、異なる点にあれば間接。/ <code>is_gap_direct</code> → <code>is_gap_direct_int</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L50" target="_blank" rel="noopener">featurize.py:50</a>)として 0/1 特徴量。S_p モデルで SHAP 7 位。/ ギャップの「大きさ」($E_g$)とは独立な「型」の情報。</p>
+<h3 id="g-ゼーベック係数">ゼーベック係数</h3>
+<p>温度勾配 $\nabla T$ が生む起電力の係数 $S$ [µV/K]。$\vec E = S \nabla T$。/ ステージ2 の目的変数 <code>seebeck_p_uV_K</code>・<code>seebeck_n_uV_K</code>(300 K、キャリア濃度 $10^{18}\,\mathrm{cm^{-3}}$、テンソル固有値平均)。/ 電気伝導率とは独立の量で、熱電性能指数 $ZT = S^2 \sigma T / \kappa$ では二乗で効く。</p>
+<h3 id="g-電気伝導率">電気伝導率</h3>
+<p>電場 $\vec E$ に対する電流密度の応答 $\vec j = \sigma \vec E$ の係数 $\sigma$ [S/m]。/ ステージ3 の目的変数。データセットには $\sigma/\tau$ で収録され、$\tau = 10^{-14}$ s を掛けて S/m に換算(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L45-L47" target="_blank" rel="noopener">get_transport_data.py:45-47</a>, 180-181)、学習は $\log_{10}\sigma$。/ 「抵抗率」はその逆数 $\rho = 1/\sigma$。本データの σ は実測値ではなく定緩和時間近似下の計算値である点が実験値との本質的な差。</p>
+<h3 id="g-定緩和時間近似">定緩和時間近似</h3>
+<p>ボルツマン輸送方程式で、キャリアの散乱を単一の定数緩和時間 $\tau$(散乱間の平均時間)で表す近似。CRTA。/ Ricci データセットは $\tau = 10^{-14}$ s 固定で σ を計算(README:47-49)。σ の絶対値はこの仮定に比例して変わる。/ $S$ は CRTA の下では $\tau$ に依存しない(分子・分母で相殺)ため、S の値はこの仮定の影響を受けない。</p>
+<h3 id="g-BoltzTraP">BoltzTraP</h3>
+<p>DFT バンド構造からボルツマン輸送理論で $S$、$\sigma/\tau$ 等を計算するプログラム。/ 目的変数の生成元(Ricci et al. 2017 が MP のバンド構造に適用)。本パイプラインはこの計算の代替モデルを学習する。/ DFT はバンド構造を求める段、BoltzTraP はそこから輸送係数を求める後段で、別の計算である。</p>
+<h3 id="g-DFT">DFT</h3>
+<p>密度汎関数理論。電子密度を基本変数として多電子系の基底状態を計算する第一原理手法。/ MP 登録値(バンドギャップ、E_hull、密度等)の生成元であり、本パイプラインが「置き換える」対象の計算(README:5-7)。/ 経験パラメータを使う半経験的手法との対比で「第一原理」と呼ばれる。</p>
+<h3 id="g-GGA">GGA</h3>
+<p>一般化勾配近似。DFT の交換相関汎関数の一種。/ MP・Ricci データの計算水準(GGA/GGA+U)。バンドギャップを系統的に過小評価することが既知で、README:153-155 と <a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/index.html#L194" target="_blank" rel="noopener">index.html:194</a> が注意書きしている。/ より高精度な GW 近似やハイブリッド汎関数は高コストで、MP の大規模データには使われていない。</p>
+<h3 id="g-energy-above-hull">energy above hull</h3>
+<p>組成系の熱力学的凸包(その組成で最も安定な相・相分解の組み合わせ)からのエネルギー差 $E_{\mathrm{hull}}$ [eV/atom]。0 なら最安定。/ 安定相フィルタ $E_{\mathrm{hull}} \le 0.05$(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/get_data.py#L63" target="_blank" rel="noopener">get_data.py:63</a>、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L165-L166" target="_blank" rel="noopener">get_transport_data.py:165-166</a>)。ダッシュボードでは meV/atom 表示。/ 生成エネルギー(単体からの生成熱)とは異なる。生成エネルギーが負でも、より安定な競合相があれば $E_{\mathrm{hull}} &gt; 0$ になる。</p>
+<h3 id="g-キャリア濃度">キャリア濃度</h3>
+<p>伝導に寄与する電子または正孔の密度 $n$ [cm⁻³]。/ データセット全体で $10^{18}\,\mathrm{cm^{-3}}$ に固定されており、列として存在しないため特徴量にならない(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/docs/DATA_SOURCES.md#L89-L90" target="_blank" rel="noopener">DATA_SOURCES.md:89-90</a>)。/ ドーピング「濃度」はこの $n$ を指し、p 型/n 型という「極性」とは別の軸。</p>
+<h3 id="g-p型-n型">p型/n型</h3>
+<p>多数キャリアが正孔なら p 型、電子なら n 型。/ 全目的変数が p/n 別に収録され、モデルも 4 本に分かれる(<code>seebeck_p_uV_K</code> 等)。/ 同一材料に p と n の両方の値があるのは、同じバンド構造に対して両極性のドーピングを仮定して計算しているため。実試料の極性はドーパントで決まる。</p>
+<h3 id="g-結晶系">結晶系</h3>
+<p>格子の対称性による 7 分類(立方・六方・三方・正方・斜方・単斜・三斜)。/ <code>crystal_system</code> を one-hot 化して 7 特徴量(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L53" target="_blank" rel="noopener">featurize.py:53</a>)、ダッシュボードのフィルタチップ(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js#L26-L30" target="_blank" rel="noopener">app.js:26-30</a>)。/ 空間群(230 種)の粗い上位分類。</p>
+<h3 id="g-空間群">空間群</h3>
+<p>結晶の対称操作の群。1–230 の通し番号。/ <code>spacegroup_number</code> を整数のまま特徴量に使用(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L32" target="_blank" rel="noopener">featurize.py:32</a>)。S_p モデルで SHAP 4 位。/ 番号は分類ラベルであり、値の大小に連続的な物理量の意味はない(順序が対称性の高低と部分的に相関するのみ)。</p>
+<h3 id="g-多形">多形</h3>
+<p>同一組成で原子配列が異なる結晶。/ ステージ1 で 8 組成が 114 行になる理由。ステージ2・3 でも 15,479 行中、組成の重複を持つ行が 4,666 行ある(92_audit.md)。/ 同素体は単体元素の場合の呼称。</p>
+<h3 id="g-有効質量">有効質量</h3>
+<p>バンドの曲率で定義される、結晶中キャリアの見かけの質量 $m^*$。伝導度有効質量は $\sigma$ の計算に直結する。/ Ricci データに収録されているが、<strong>目的変数と同じ BoltzTraP 計算に由来するため特徴量から意図的に除外</strong>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L8-L9" target="_blank" rel="noopener">featurize.py:8-9</a>、README:70-73)。/ 自由電子質量 $m_e$ とは異なり、材料・バンドごとに変わる。</p>
+<h3 id="g-バイポーラ伝導">バイポーラ伝導</h3>
+<p>ギャップが小さい半導体で電子と正孔が同時に熱励起され、両者のゼーベック寄与(符号が逆)が相殺する現象。/ 「小さい $E_g$ が $|S|$ を急激に抑制する」という SHAP の方向性の物理的解釈(README:93-96)。/ 単一キャリア極性の伝導(通常のドープ半導体)との対比。</p>
+<h3 id="g-熱電材料">熱電材料</h3>
+<p>温度差から発電(またはその逆)する材料。性能は $S$、$\sigma$、熱伝導率 $\kappa$ で決まる。/ Bi₂Te₃、SnSe、Mg₂Si、ZrNiSn、CoSb₃ の残存確認(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L188-L197" target="_blank" rel="noopener">get_transport_data.py:188-197</a>)がデータセットの健全性チェックになっている。/ パワーファクター $PF = S^2\sigma$ は Ricci データに収録されているが本リポジトリでは未使用。</p>
+<h3 id="g-Materials-Project">Materials Project</h3>
+<p>DFT 計算物性の大規模公開データベース(略称 MP)。/ 特徴量とフィルタの供給源(summary API)。輸送物性は持たない(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/docs/DATA_SOURCES.md#L20-L29" target="_blank" rel="noopener">DATA_SOURCES.md:20-29</a> で全 69 フィールドを確認)。/ MPContribs とは別サービスである点に注意。</p>
+<h3 id="g-MPContribs">MPContribs</h3>
+<p>MP に付随するユーザー投稿データの基盤。/ <code>carrier_transport</code> プロジェクト(Ricci et al. 2017、CC-BY 4.0)から目的変数を取得(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L56-L71" target="_blank" rel="noopener">get_transport_data.py:56-71</a>)。/ MP 本体(Materials Project コア DB)はキュレーションされた計算結果、MPContribs は外部研究グループの寄託データ。</p>
+<h3 id="g-mp-id">mp-id</h3>
+<p>MP の材料識別子(例: mp-34202)。/ 2 データベースの結合キー(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L160" target="_blank" rel="noopener">get_transport_data.py:160</a>)。2017 年当時の id が現行 MP に無い場合は結合で脱落する(30,467 → 22,623)。/ 組成式は一意でない(多形)ため、結合キーには使えない。</p>
+<h2 id="90_glossary-h2">機械学習側</h2>
+<h3 id="g-特徴量">特徴量</h3>
+<p>モデルへの入力となる数値変数。本リポジトリでは 145 次元。/ featurize.py が生成、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L190" target="_blank" rel="noopener">train.py:190</a> が「メタ・目的変数以外の全列」として選択。/ 「記述子」とほぼ同義だが、記述子は材料を数値化する変換規則側を指すことが多い。</p>
+<h3 id="g-記述子">記述子</h3>
+<p>材料の組成・構造を機械可読な数値に写像する変換とその出力。/ Magpie(組成記述子)+ 構造スカラー(密度等)の 2 系統(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L4-L9" target="_blank" rel="noopener">featurize.py:4-9</a>)。/ 特徴量の項を参照。</p>
+<h3 id="g-Magpie記述子">Magpie記述子</h3>
+<p>元素物性 22 種(原子番号、融点、電気陰性度、価電子数など)について、組成中の元素にわたる 6 統計量(min, max, range, 分率加重 mean, 分率加重 avg_dev, mode)を取った $22 \times 6 = 132$ 次元の組成記述子。数式は <a href="#doc-03_featurize">03_featurize.md</a> §3。/ <code>ElementProperty.from_preset("magpie")</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L45" target="_blank" rel="noopener">featurize.py:45</a>)。/ 構造情報(原子配列)は一切含まない点が構造記述子との差。同一組成の多形は同一の Magpie ベクトルを持つ。</p>
+<h3 id="g-matminer">matminer</h3>
+<p>材料情報学用の Python ライブラリ。記述子生成器を多数提供する。/ <code>StrToComposition</code> と <code>ElementProperty</code> のみ使用(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L15-L16" target="_blank" rel="noopener">featurize.py:15-16</a>)。/ pymatgen(結晶構造操作)の上位で動くツール群であり、モデル学習は scikit-learn の担当。</p>
+<h3 id="g-one-hotエンコーディング">one-hotエンコーディング</h3>
+<p>カテゴリ変数を、カテゴリ数と同数の 0/1 列に展開する変換。/ <code>crystal_system</code> → 7 列(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L53-L54" target="_blank" rel="noopener">featurize.py:53-54</a>)。/ 整数ラベル化(<code>spacegroup_number</code> の扱い)と異なり、カテゴリ間に偽の順序を持ち込まない。</p>
+<h3 id="g-ランダムフォレスト">ランダムフォレスト</h3>
+<p>ブートストラップ標本で学習した $B$ 本の決定木の平均 $\hat y(x) = \frac{1}{B}\sum_b T_b(x)$ による回帰。/ <code>RandomForestRegressor(n_estimators=300, min_samples_leaf=2)</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L138-L140" target="_blank" rel="noopener">train.py:138-140</a>)が全 4 モデル共通。/ 勾配ブースティング(XGBoost 等)は木を逐次的に誤差へ適合させる点が異なる。採用理由の比較は <a href="#doc-91_design_decisions">91_design_decisions.md</a>。</p>
+<h3 id="g-train-test分割">train/test分割</h3>
+<p>データを学習用と評価用に排他分割すること。/ <code>train_test_split(test_size=0.2, random_state=42)</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L133-L135" target="_blank" rel="noopener">train.py:133-135</a>)で 12,383 / 3,096。/ 行単位の無作為分割であり、材料単位・組成単位のグループ分割ではない(92_audit.md の主要指摘)。</p>
+<h3 id="g-交差検証">交差検証</h3>
+<p>データを $k$ 分割し、各分割をテストに回して $k$ 回学習・評価する汎化性能の推定法。5-fold CV の報告値は $\bar R^2 \pm s$(平均と標準偏差)。/ <code>cross_val_score(cv=5)</code> を<strong>訓練側 12,383 行のみ</strong>に適用(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L150-L151" target="_blank" rel="noopener">train.py:150-151</a>)。/ ホールドアウト(1 回分割)より分散の小さい推定になるが、分割がグループ化されていない点は train/test 分割と同じ。</p>
+<h3 id="g-データリーク">データリーク</h3>
+<p>評価時に知り得ないはずの情報が学習・特徴量に混入し、見かけの精度が実力より高くなること。/ 有効質量 $m^*$ の除外(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L8-L9" target="_blank" rel="noopener">featurize.py:8-9</a>)はターゲット隣接リークの防止。組成重複の分割またぎというリーク経路が残っている(92_audit.md)。/ 過学習(モデルが訓練データに過剰適合すること)とは異なり、リークは評価設計の欠陥である。</p>
+<h3 id="g-GroupShuffleSplit">GroupShuffleSplit</h3>
+<p>同一グループ(例: 同一組成)の行が train と test に分かれないよう、グループ単位で無作為分割する scikit-learn の分割器。/ 本リポジトリでは<strong>未使用</strong>。組成重複への対処として 92_audit.md が導入を検討対象に挙げる。/ <code>train_test_split</code> は行単位、<code>GroupKFold</code> はそのグループ版交差検証。</p>
+<h3 id="g-SHAP">SHAP</h3>
+<p>協力ゲーム理論の Shapley 値に基づく寄与分解。予測を $\hat y(x_i) = \phi_0 + \sum_j \phi_{ij}$ と加法分解し、$\phi_{ij}$ が標本 $i$ での特徴量 $j$ の寄与。重要度は $I_j = \mathrm{mean}_i |\phi_{ij}|$。/ shap_analysis(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L98-L118" target="_blank" rel="noopener">train.py:98-118</a>)。「E_g が S の最重要特徴量」という中心的主張の根拠。/ ランダムフォレスト固有の不純度重要度(<code>feature_importances_</code>)と異なり、標本ごと・方向つきの寄与が得られ、カーディナリティの高い特徴量への偏りも小さい。</p>
+<h3 id="g-TreeExplainer">TreeExplainer</h3>
+<p>木系モデルに対し SHAP 値を多項式時間で厳密計算するアルゴリズム。/ <code>shap.TreeExplainer(model)</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L101" target="_blank" rel="noopener">train.py:101</a>)。テスト集合から 1,000 行を抽出して計算。/ モデル非依存の KernelExplainer は近似かつ低速で、木モデルには通常使わない。</p>
+<h3 id="g-MAE">MAE</h3>
+<p>平均絶対誤差 $\mathrm{MAE} = \frac{1}{n}\sum_i |y_i - \hat y_i|$。目的変数と同じ単位。/ test 評価(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L145" target="_blank" rel="noopener">train.py:145</a>)。σ モデルでは log₁₀ 空間の値(単位 dex)。/ RMSE と異なり外れ値に線形にしか反応しない。</p>
+<h3 id="g-RMSE">RMSE</h3>
+<p>二乗平均平方根誤差 $\mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_i (y_i - \hat y_i)^2}$。/ <a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L146" target="_blank" rel="noopener">train.py:146</a>。/ 大きい誤差を二乗で重く数えるため、常に $\mathrm{RMSE} \ge \mathrm{MAE}$。両者の開きは誤差分布の裾の重さの指標になる。</p>
+<h3 id="g-決定係数">決定係数</h3>
+<p>$R^2 = 1 - \sum_i (y_i - \hat y_i)^2 / \sum_i (y_i - \bar y)^2$。1 が完全予測、0 が「平均値を返すだけ」と同等。/ test と CV の両方で報告(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L147" target="_blank" rel="noopener">train.py:147</a>, 150-151)。/ 相関係数の二乗と一致するのは線形回帰の場合のみで、一般のモデルでは負にもなり得る。</p>
+<h3 id="g-パリティプロット">パリティプロット</h3>
+<p>横軸に真値、縦軸に予測値を取り、対角線 $\hat y = y$ からの散らばりで精度を見る散布図。/ parity_plot(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L73-L95" target="_blank" rel="noopener">train.py:73-95</a>)。横軸ラベルは「DFT+BoltzTraP value」で、真値が計算値であることを明示。/ 残差プロット(横軸真値・縦軸誤差)の変種であり、系統的な過小・過大予測が対角線からの偏りとして見える。</p>
+<h3 id="g-対数変換">対数変換</h3>
+<p>目的変数を $\log_{10} y$ に変換して学習すること。/ σ のみ適用(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L127-L130" target="_blank" rel="noopener">train.py:127-130</a>)。数桁にわたる分布を圧縮し、二乗誤差が大値に支配されるのを防ぐ。/ 逆変換 $10^{\hat y}$ で元の単位に戻せるが、本リポジトリは log₁₀ 空間のまま評価・表示する(MAE の単位 dex)。</p>
+<h3 id="g-目的変数">目的変数</h3>
+<p>モデルが予測すべき変数。/ <code>TARGET_COLS</code> の 4 列(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L24" target="_blank" rel="noopener">featurize.py:24</a>)。/ 「ターゲット」と同義。特徴量(入力)との対をなす。</p>
+<h3 id="g-random_state">random_state</h3>
+<p>擬似乱数の種。/ <code>SEED = 42</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L69" target="_blank" rel="noopener">train.py:69</a>)を分割・モデル・SHAP 抽出で共有し、再実行の完全再現性を保証する。/ これを固定しても、入力 CSV が MP 側の更新で変われば結果は変わる(再現性の範囲はコードと入力の組に限られる)。</p>
+<h3 id="g-サロゲートモデル">サロゲートモデル</h3>
+<p>高コストな計算・実験の入出力関係を学習し、低コストで近似する代理モデル。/ 本パイプラインの全モデルは DFT+BoltzTraP のサロゲート(README:5-7)。/ 予測対象が「実験値」ではなく「計算値」である点が、実験データ駆動の物性予測モデルとの差。</p>
+</article>
+
+<article class="doc" id="doc-91_design_decisions">
+<header class="doc-head"><span class="doc-num">91</span><h1>設計判断と却下された選択肢</h1></header>
+<p>コード・README・docs/DATA_SOURCES.md から読み取れる分岐点を列挙する。「影響」はコードと保存済み成果物から判断できる範囲で書き、再実験しないと分からないものはその旨を明記する。</p>
+<h2 id="91_design_decisions-h1">D1. カスケード禁止(予測値を後段に流さない)</h2>
+<ul>
+<li><strong>採用</strong>: 全ステージの入力を<a class="wl" href="#g-Materials-Project">Materials Project</a> 登録値に固定。バンドギャップ特徴量は <code>band_gap_mp_eV</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L5-L6" target="_blank" rel="noopener">featurize.py:5-6</a>)、ステージ3 はステージ2 の予測値を使わない(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L9-L11" target="_blank" rel="noopener">train.py:9-11</a>)。</li>
+<li><strong>却下</strong>: ステージ1 の予測ギャップを 2・3 の特徴量にする案、ステージ2 の予測 S を 3 の特徴量にする案(README:20-36 が明示的に却下)。</li>
+<li><strong>影響</strong>: 各モデルが独立に評価可能になり、下流の精度低下の原因切り分けが成立する。代償として「予測しか手に入らない未知材料」への適用時は、登録ギャップの代わりに何かを入れる必要が生じる(現構成ではスクリーニング対象も MP 登録材料である前提)。</li>
+</ul>
+<h2 id="91_design_decisions-h2">D2. 目的変数のデータソース</h2>
+<ul>
+<li><strong>採用</strong>: <a class="wl" href="#g-MPContribs">MPContribs</a> <code>carrier_transport</code>(BoltzTraP 計算値、300 K・$10^{18}\,\mathrm{cm^{-3}}$ 固定、CC-BY 4.0)。</li>
+<li><strong>却下</strong>: (a) MP 本体 API — 輸送物性が存在しないことを全 69 フィールドの列挙で確認(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/docs/DATA_SOURCES.md#L20-L29" target="_blank" rel="noopener">DATA_SOURCES.md:20-29</a>)。(b) 実験データセット(UCSB/Citrine、ESTM)— mp-id キーでないため登録ギャップ特徴量と E_hull フィルタの設計が崩れる(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/docs/DATA_SOURCES.md#L68-L72" target="_blank" rel="noopener">DATA_SOURCES.md:68-72</a>)。(c) <code>atMax</code> 最適値や温度・濃度分解テーブルの取得 — 1 材料 1 値の設計に合わせて固定条件スカラーを採用(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/docs/DATA_SOURCES.md#L73-L75" target="_blank" rel="noopener">DATA_SOURCES.md:73-75</a>)。</li>
+<li><strong>影響</strong>: 15,479 件という規模と mp-id 結合の単純さを得た。代わりに目的変数は実験値でなく計算値であり、モデルの検証範囲は「計算の代替」に限定される(README:153-158)。</li>
+</ul>
+<h2 id="91_design_decisions-h3">D3. σ の扱い: 単位換算 + 対数変換</h2>
+<ul>
+<li><strong>採用</strong>: $\sigma = 10 \times (\sigma/\tau)_{\rm raw}$ で S/m に換算(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L45-L47" target="_blank" rel="noopener">get_transport_data.py:45-47</a>)した上で $\log_{10}\sigma$ を学習(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L61-L64" target="_blank" rel="noopener">train.py:61-64</a>)。</li>
+<li><strong>却下</strong>: 線形スケールでの学習(採用しなかった理由はコメント「桁が数桁にわたるため」<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L61" target="_blank" rel="noopener">train.py:61</a>)。$\tau$ を可変にする案はデータ側に存在しない(全材料 $\tau = 10^{-14}$ s 固定)。</li>
+<li><strong>影響</strong>: 換算は定数倍なので log 空間では切片シフトに過ぎず、R² は換算の有無に依存しない。学習量の実体が $\sigma/\tau$ と等価である点は <a href="#doc-92_audit">92_audit.md</a> A5 参照。</li>
+</ul>
+<h2 id="91_design_decisions-h4">D4. 特徴量の構成</h2>
+<ul>
+<li><strong>採用</strong>: <a class="wl" href="#g-Magpie記述子">Magpie記述子</a> 132 + MP スカラー 5 + 直接遷移フラグ 1 + <a class="wl" href="#g-結晶系">結晶系</a> one-hot 7 = 145(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L27-L61" target="_blank" rel="noopener">featurize.py:27-61</a>)。</li>
+<li><strong>却下</strong>: (a) <a class="wl" href="#g-有効質量">有効質量</a> $m^*$ — 目的変数と同一の BoltzTraP 計算に由来するため<a class="wl" href="#g-データリーク">データリーク</a>として除外(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L8-L9" target="_blank" rel="noopener">featurize.py:8-9</a>)。(b) <a class="wl" href="#g-キャリア濃度">キャリア濃度</a> — 全行同値で情報を持たないため除外(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/docs/DATA_SOURCES.md#L89-L90" target="_blank" rel="noopener">DATA_SOURCES.md:89-90</a>)。(c) 結晶構造そのもの(グラフニューラルネット等の構造入力)— コード・文書に検討痕跡なし(採用しなかった理由はコードからは判断不能)。</li>
+<li><strong>影響</strong>: $m^*$ 除外は見かけ精度の低下と引き換えに評価の健全性を守る選択。組成記述子中心のため、同一組成の<a class="wl" href="#g-多形">多形</a>は 145 次元中 132 次元が同一になり、構造の違いはスカラー 13 次元だけで区別される。</li>
+</ul>
+<h2 id="91_design_decisions-h5">D5. 空間群番号を整数のまま使う</h2>
+<ul>
+<li><strong>採用</strong>: <code>spacegroup_number</code>(1–230)を連続値として投入(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L32" target="_blank" rel="noopener">featurize.py:32</a>)。</li>
+<li><strong>却下</strong>: 230 クラスの one-hot(次元爆発)、除外。</li>
+<li><strong>影響</strong>: 木モデルは整数ラベルを閾値分割で扱えるため線形モデルほど不合理ではないが、番号の大小自体に物理量の意味は無い。S_p で SHAP 4 位に入っており、対称性情報の代理として機能している。</li>
+</ul>
+<h2 id="91_design_decisions-h6">D6. モデル: ランダムフォレスト固定・チューニングなし</h2>
+<ul>
+<li><strong>採用</strong>: <code>RandomForestRegressor(n_estimators=300, min_samples_leaf=2, random_state=42)</code> を 4 ターゲット共通で使用(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L138-L140" target="_blank" rel="noopener">train.py:138-140</a>)。ハイパーパラメータ探索のコードは無い。</li>
+<li><strong>却下</strong>: 勾配ブースティング、線形モデル、ニューラルネット、ターゲット別チューニング — いずれも検討痕跡なし(コードからは判断不能)。</li>
+<li><strong>影響</strong>: スケーリング不要・<a class="wl" href="#g-TreeExplainer">TreeExplainer</a> で厳密 <a class="wl" href="#g-SHAP">SHAP</a> が計算できる点は要件(寄与の定量化)に整合する。チューニング不在のため、報告精度は「既定に近い設定の下限」であり、探索で改善する余地の有無は再実験が必要。</li>
+</ul>
+<h2 id="91_design_decisions-h7">D7. 4 モデル独立学習(マルチ出力にしない)</h2>
+<ul>
+<li><strong>採用</strong>: p/n × S/σ の 4 ターゲットを 1 本ずつ独立に学習(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L194-L197" target="_blank" rel="noopener">train.py:194-197</a>)。</li>
+<li><strong>却下</strong>: 4 出力同時のマルチターゲット回帰。</li>
+<li><strong>影響</strong>: ターゲットごとに SHAP・指標が分離され、D1 の「独立に評価可能」という方針と一貫する。ターゲット間相関(S と σ のトレードオフ)は利用されない。</li>
+</ul>
+<h2 id="91_design_decisions-h8">D8. 分割: 行単位の無作為 80/20 + 訓練側 5-fold CV</h2>
+<ul>
+<li><strong>採用</strong>: <code>train_test_split(test_size=0.2, random_state=42)</code> と <code>cross_val_score(cv=5)</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L133-L135" target="_blank" rel="noopener">train.py:133-135</a>, 150-151)。</li>
+<li><strong>却下</strong>: <a class="wl" href="#g-GroupShuffleSplit">GroupShuffleSplit</a> 等の組成グループ分割 — コードに痕跡なし。時系列分割・外挿分割(新規元素系での評価)も無し。</li>
+<li><strong>影響</strong>: 同一組成の多形が train/test に分かれて入る(テスト行の 27.6%。<a href="#doc-92_audit">92_audit.md</a> A1)。報告 R² は「登録済み材料の内挿」の精度であり、未知組成への外挿性能はこれより低い可能性が高い。</li>
+</ul>
+<h2 id="91_design_decisions-h9">D9. 欠損処理: 行削除のみ</h2>
+<ul>
+<li><strong>採用</strong>: 目的変数欠損の行削除(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L176-L177" target="_blank" rel="noopener">get_transport_data.py:176-177</a>)と特徴量欠損の行削除(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L66" target="_blank" rel="noopener">featurize.py:66</a>)。</li>
+<li><strong>却下</strong>: 補完(平均値・モデルベース)。</li>
+<li><strong>影響</strong>: 現データでは両段とも削除 0 行のため実影響なし。補完と違い分布を歪めないが、将来欠損が増えた場合はサンプル数が黙って減る。</li>
+</ul>
+<h2 id="91_design_decisions-h10">D10. フィルタ基準</h2>
+<ul>
+<li><strong>採用</strong>: $E_{\mathrm{hull}} \le 0.05$ eV/atom(ステージ1 と同一基準、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L42-L43" target="_blank" rel="noopener">get_transport_data.py:42-43</a>)と MP 登録ギャップ $&gt; 0$(:171)。metal=No フラグ(2017 年判定)だけに頼らない。</li>
+<li><strong>却下</strong>: E_hull 閾値の別値(0 = 最安定のみ、0.1 等)、BoltzTraP 側のギャップ <code>dE</code> によるフィルタ。</li>
+<li><strong>影響</strong>: 22,623 → 15,479 件への絞り込み。閾値 0.05 の感度は未検証(再実験が必要)。</li>
+</ul>
+<h2 id="91_design_decisions-h11">D11. キャッシュと再現性</h2>
+<ul>
+<li><strong>採用</strong>: MPContribs 生データを CSV キャッシュ(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L52-L54" target="_blank" rel="noopener">get_transport_data.py:52-54</a>)、<code>SEED = 42</code> 固定、再生成可能な成果物(.joblib、中間 CSV)は git 管理外(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/.gitignore#L7-L10" target="_blank" rel="noopener">.gitignore:7-10</a>)。</li>
+<li><strong>却下</strong>: キャッシュの有効期限・バージョン管理、モデルのコミット。</li>
+<li><strong>影響</strong>: コード + 手元キャッシュがあれば metrics.json はビット単位で再現する。一方、クローン直後の再構築は現行 MP への問い合わせになるため、MP 側の更新で件数・値が漂移し得る(件数 15,479 は固定スナップショット値として扱う — 2026-09-15 作者回答)。</li>
+</ul>
+<h2 id="91_design_decisions-h12">D12. Web 配布の形態</h2>
+<ul>
+<li><strong>採用</strong>: 依存ゼロの静的 SPA。データは <code>fetch</code> でなく JS グローバル(<code>window.MILAB_DATA</code>)として <code>&lt;script&gt;</code> 読み込み(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py#L49-L51" target="_blank" rel="noopener">build_data.py:49-51</a>)。正の配布形態は <code>web/index.html</code> 直接オープン、単一ファイル版は副次(2026-09-15 作者回答)。パリティ PNG は手動コピー運用。</li>
+<li><strong>却下</strong>: サーバ前提の構成、フレームワーク導入、ビルドチェーン。</li>
+<li><strong>影響</strong>: <code>file://</code> の二重クリックで動く。代償として、概要ビューの KPI・ファネル件数のハードコード(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js#L151-L190" target="_blank" rel="noopener">app.js:151-190</a>)と PNG 手動コピーという、再学習時に人手更新が必要な箇所が残る(<a href="#doc-92_audit">92_audit.md</a> A4)。</li>
+</ul>
+</article>
+
+<article class="doc" id="doc-92_audit">
+<header class="doc-head"><span class="doc-num">92</span><h1>実装監査</h1></header>
+<p>検査日 2026-09-15、作業ツリー commit 8a6c36a 基準。件数を伴う指摘は、リポジトリ内の実データ(transport_dataset.csv / features_dataset.csv)に対して <code>random_state=42</code>・<code>test_size=0.2</code> の分割を再現して計測した値である。</p>
+<h2 id="92_audit-h1">A1. データリーク(同一組成・同一材料の train/test 混入)</h2>
+<p class="callout warn"><strong>指摘あり(組成レベル)。</strong></p>
+<ul>
+<li>同一<strong>材料</strong>の重複は無い: <code>drop_duplicates(subset="material_id")</code>(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L93" target="_blank" rel="noopener">get_transport_data.py:93</a>)により mp-id は一意で、同じ材料が train と test の両方に入ることはない。</li>
+<li>同一<strong>組成</strong>の重複はある: 15,479 行のうち <code>formula_pretty</code> が重複する行は 4,666 行(1,685 組成)。<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L133-L135" target="_blank" rel="noopener">train.py:133-135</a> の行単位無作為分割を再現すると、<strong>テスト 3,096 行中 856 行(27.6%)は、同じ組成の別行(<a class="wl" href="#g-多形">多形</a>)が訓練側に存在する</strong>。</li>
+<li>特徴量 145 次元のうち <a class="wl" href="#g-Magpie記述子">Magpie記述子</a> 132 次元は組成のみから決まるため、これらのペアは特徴量の 9 割超が同一である(スカラー 13 次元は構造依存のため、145 次元が完全一致する train/test ペアは 0 組)。</li>
+<li>帰結: 報告されている test R²(0.68–0.76)には「訓練で見たものとほぼ同じ入力の再認」が部分的に含まれ、未知組成に対する汎化性能の推定としては楽観側に偏る。偏りの大きさはグループ分割での再実験(A2)をしないと定量できない。</li>
+</ul>
+<h2 id="92_audit-h2">A2. 分割方法が材料単位になっているか(GroupShuffleSplit 等の要否)</h2>
+<p class="callout warn"><strong>指摘あり(要検討)。</strong> 分割は材料(行)単位ではあるが、組成単位ではない(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L133-L135" target="_blank" rel="noopener">train.py:133-135</a>)。<a class="wl" href="#g-交差検証">交差検証</a>も同様に行単位である(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L150-L151" target="_blank" rel="noopener">train.py:150-151</a>)。A1 の混入を断つには <code>GroupShuffleSplit</code> / <code>GroupKFold</code>(groups=<code>formula_pretty</code>)への置き換えが必要。現在のスコアの用途を「MP 登録済み材料の内挿精度」と明示するなら現行分割にも意味はあるが、README:5-7 の掲げる用途(スクリーニング=未知材料への適用)に対しては、グループ分割のスコアを併記しないと過大評価になる。</p>
+<h2 id="92_audit-h3">A3. 前処理が fold 内で閉じているか</h2>
+<p class="callout ok"><strong>該当なし。</strong> 本パイプラインの前処理は全て行単位の決定的変換であり、データ分布から統計量を推定する処理(標準化のスケーラ、分位点、PCA 等)が存在しない。Magpie は組成のみの関数(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L42-L47" target="_blank" rel="noopener">featurize.py:42-47</a>)、one-hot は固定 7 カテゴリの展開(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/featurize.py#L53-L54" target="_blank" rel="noopener">featurize.py:53-54</a>)、<a class="wl" href="#g-対数変換">対数変換</a>は行ごとの $\log_{10}$(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L127-L130" target="_blank" rel="noopener">train.py:127-130</a>)である。したがって「テスト集合の統計が前処理を通じて訓練側に漏れる」経路は無い。<code>pd.get_dummies</code> のカテゴリ集合が全データから決まる点も、7 結晶系が固定である限り統計的リークにならない。</p>
+<h2 id="92_audit-h4">A4. 評価指標の妥当性と報告スコアの再現可能性</h2>
+<p class="callout note"><strong>指標自体は妥当。再現性に条件と注意点あり。</strong></p>
+<ul>
+<li>指標の定義(MAE/RMSE/R²、CV は訓練側のみ、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L143-L153" target="_blank" rel="noopener">train.py:143-153</a>)は正当。テスト集合が CV に混入していない点も確認した。</li>
+<li>README:82-89 の表の全数値は <code>transport/results/*/metrics.json</code> と一致することを照合済み(例: S_p の MAE 49.4 ↔ 49.4178、CV 0.683±0.033 ↔ 0.6832/0.0327)。</li>
+<li><code>SEED=42</code> 固定により、<strong>手元の features_dataset.csv からの再実行はビット単位で再現する</strong>。ただし features_dataset.csv と carrier_transport_raw.csv は git 管理外(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/.gitignore#L9-L10" target="_blank" rel="noopener">.gitignore:9-10</a>)のため、クローン直後の再構築は現行 MP への問い合わせとなり、MP 側更新で件数・値が変わり得る。README:55-59 の中間件数(22,623・15,682)は実行ログにしか残らず、成果物からは再検証できない。</li>
+<li>SHAP 順位はテスト集合からの 1,000 行抽出(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L100" target="_blank" rel="noopener">train.py:100</a>)に基づくため標本ノイズを含む。S の 1 位(2 位に約 4 倍差、shap_importance CSV で確認)は頑健だが、σ の 4 位/7 位は近接順位と入れ替わり得る。</li>
+<li>表示側の不整合リスク: <a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js#L151-L190" target="_blank" rel="noopener">app.js:151-190</a> の KPI「Features 145」「Best R² 0.757」とファネル件数 4 つはハードコードであり、<code>MILAB_RESULTS</code> から転記されない。パリティ PNG も手動コピー運用(2026-09-15 作者確認)。再学習後に更新を怠っても<strong>エラーは出ず</strong>、古い数値・図が表示され続ける。</li>
+<li>軽微な脆弱性: <a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/train.py#L162" target="_blank" rel="noopener">train.py:162</a> は <code>importance</code> から <code>band_gap_mp_eV</code> の行を <code>.iloc[0]</code> で取るため、列名が変わると IndexError で落ちる(現状は問題なし)。</li>
+</ul>
+<h2 id="92_audit-h5">A5. 物理的に不整合な仮定(σ/τ 問題を含む)</h2>
+<p class="callout note"><strong>表記は開示済みで整合。ただし依存文書での明示を推奨。</strong></p>
+<ul>
+<li>データの実体は $\sigma/\tau$ であり、<code>sigma_p_S_m</code> は $\sigma = (\sigma/\tau)_{\rm raw} \times 10^{15} \times 10^{-14}$(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L45-L47" target="_blank" rel="noopener">get_transport_data.py:45-47</a>)、すなわち<strong><a class="wl" href="#g-定緩和時間近似">定緩和時間近似</a> $\tau = 10^{-14}$ s を全材料に一律仮定した換算値</strong>である。README:159、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/index.html#L195" target="_blank" rel="noopener">index.html:195</a> はこれを明示しており、「σ/τ を σ と偽装する」不整合には該当しない。</li>
+<li>ただし $\log_{10}\sigma = \log_{10}(\sigma/\tau)_{\rm raw} + 1$ なので、ステージ3 のモデルが学習している情報は $\sigma/\tau$ と数学的に等価(定数シフト)である。材料間で実際の $\tau$ は桁で異なり得るため、モデルの σ 予測を実測伝導率と比較する用途には使えない。この限定は README には書かれているが、metrics.json・列名にはラベルとして現れない。</li>
+<li>特徴量とターゲットの版ずれ: ターゲットは 2017 年の BoltzTraP 計算(当時のバンド構造、<code>band_gap_boltztrap_eV</code> が痕跡)に由来し、特徴量 <code>band_gap_mp_eV</code> は現行 MP の登録値である。両者は同一材料でも一致しない場合があり、ターゲット生成時と異なるギャップ値で学習していることになる。これはリークではなくラベルノイズ側の問題で、精度の上限を下げる方向に働く。設計上どちらを使うかは D1(登録値のみ)で決めた通りであり不整合ではないが、認識しておくべき仮定である。</li>
+<li>そのほかの物理仮定(GGA ギャップの系統的過小評価、300 K・$10^{18}\,\mathrm{cm^{-3}}$ 固定)はいずれも README・DATA_SOURCES.md に開示済み。S_p 列に負値が存在する(最小 −557 µV/K)のは狭ギャップ材料の<a class="wl" href="#g-バイポーラ伝導">バイポーラ伝導</a>で説明でき、不整合ではない。</li>
+</ul>
+<h2 id="92_audit-h6">A6. 単位系の一貫性</h2>
+<p class="callout ok"><strong>該当なし(不整合は発見されなかった)。</strong> 検証内容:</p>
+<ul>
+<li>σ 換算係数 10 の導出: $1/(\mathrm{f\Omega\,m\,s}) = 10^{15}\,\Omega^{-1}\mathrm{m}^{-1}\mathrm{s}^{-1}$、$\times\, \tau\,(10^{-14}\,\mathrm{s}) = \times 10$。コメント(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L45-L46" target="_blank" rel="noopener">get_transport_data.py:45-46</a>)と実装(:47, :180-181)は一致。</li>
+<li>E_hull: eV/atom(取得・フィルタ)→ meV/atom(ダッシュボード表示、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_data.py#L44" target="_blank" rel="noopener">build_data.py:44</a> で ×1000、<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js#L479" target="_blank" rel="noopener">app.js:479</a> で「meV/atom」表示)。換算・表記とも一貫。</li>
+<li>S は全経路で µV/K、log₁₀σ の誤差の単位は dex と表記(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/app.js#L60-L61" target="_blank" rel="noopener">app.js:60-61</a>, 573)。列名に単位を含める命名(<code>_uV_K</code>、<code>_S_m</code>、<code>_eV</code>、<code>_g_cm3</code>、<code>_A3</code>)が transport_dataset → features → metrics まで維持されている。</li>
+</ul>
+<h2 id="92_audit-h7">A7. その他の実装上の問題</h2>
+<ol>
+<li><strong>E_hull 欠損の扱いがステージ間で逆</strong>: ステージ1 は <code>energy_above_hull is None</code> の行を<strong>採用</strong>する(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/get_data.py#L63" target="_blank" rel="noopener">get_data.py:63</a> の条件は None を素通しする)のに対し、ステージ2・3 は <code>notna()</code> を要求して<strong>除外</strong>する(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L165" target="_blank" rel="noopener">get_transport_data.py:165</a>)。「同じ基準」(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L42" target="_blank" rel="noopener">get_transport_data.py:42</a>)という記述は欠損の扱いについては成立していない。実害はステージ1 の 114 行のみ。</li>
+<li><strong>キャッシュに無効化機構が無い</strong>: carrier_transport_raw.csv が存在する限り、内容がどれだけ古くても黙って再利用される(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L52-L54" target="_blank" rel="noopener">get_transport_data.py:52-54</a>)。取得条件(フィールド、フィルタ)をコード側で変えた場合、キャッシュを手動削除しない限り反映されない。</li>
+<li><strong>CV の fold が連続ブロック</strong>: <code>cross_val_score(cv=5)</code> はシャッフル無しの KFold であり、features_dataset.csv は mp-id 順ソート(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/transport/get_transport_data.py#L183" target="_blank" rel="noopener">get_transport_data.py:183</a>)のまま渡される。mp-id 順は登録時期と相関するため、fold 間で材料群の性質が偏る可能性がある。cv_r2_std(0.016–0.033)が小さいことから現データでの実害は小さいと推定されるが、<code>KFold(shuffle=True, random_state=42)</code> の方が意図に忠実。</li>
+<li><strong><code>--fragment</code> の引数検証が無い</strong>: <code>sys.argv</code> の直接走査(<a class="ref" href="https://github.com/Kaimon0726/Kaimon-s-Materials-Project/blob/main/web/build_single.py#L21-L22" target="_blank" rel="noopener">build_single.py:21-22</a>)のため、<code>--fragment</code> を最後の引数に置くと IndexError になる。実害は限定的。</li>
+</ol>
+</article>
+
+</main>
+</div>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']],processEscapes:true},
+  svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+mermaid.initialize({startOnLoad:true,securityLevel:'loose',
+  theme:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'neutral',
+  flowchart:{htmlLabels:true,curve:'basis'}});
+</script>
+<script>
+(function(){
+  var side=document.querySelector('.side details');
+  var mq=matchMedia('(min-width:901px)');
+  function sync(){ if(mq.matches) side.open=true; }
+  sync(); mq.addEventListener('change',sync);
+
+  var docs=[].slice.call(document.querySelectorAll('article.doc'));
+  var heads=[].slice.call(document.querySelectorAll('article.doc h2[id],article.doc h3[id]'));
+  var navDoc={}, navHead={};
+  document.querySelectorAll('.nav-docs>li').forEach(function(li){navDoc[li.dataset.doc]=li;});
+  document.querySelectorAll('.nav-sub li a').forEach(function(a){navHead[a.getAttribute('href').slice(1)]=a.parentNode;});
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var y=120, curDoc=docs[0], curHead=null;
+    for(var i=0;i<docs.length;i++){ if(docs[i].getBoundingClientRect().top<=y) curDoc=docs[i]; }
+    for(var j=0;j<heads.length;j++){ var h=heads[j]; if(h.getBoundingClientRect().top<=y && curDoc.contains(h)) curHead=h; }
+    Object.keys(navDoc).forEach(function(k){navDoc[k].classList.toggle('active',k===curDoc.id);});
+    Object.keys(navHead).forEach(function(k){navHead[k].classList.toggle('active',!!curHead&&k===curHead.id);});
+    if(curHead&&navHead[curHead.id]&&mq.matches){
+      var el=navHead[curHead.id], box=el.closest('.side'), r=el.getBoundingClientRect(), b=box.getBoundingClientRect();
+      if(r.top<b.top+40||r.bottom>b.bottom-40) el.scrollIntoView({block:'center'});
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update);} }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll);
+  update();
+  // 同一ページ内リンクは閲覧中のドキュメントを開いてから移動
+  if(!mq.matches) document.querySelectorAll('.side a').forEach(function(a){a.addEventListener('click',function(){side.open=false;});});
+})();
+</script>
+</body>
+</html>
